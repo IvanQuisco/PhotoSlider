@@ -13,15 +13,6 @@ import ComposableArchitecture
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    
-    let appStore: Store<AppState, AppAction> = {
-        Store(
-            initialState: AppState(uiState: .login),
-            reducer: appReducer,
-            environment: AppEnvironment()
-        )
-    }()
-
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -32,7 +23,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         FirebaseApp.configure()
         
         // Create the SwiftUI view that provides the window contents.
-        let contentView = AppView(store: appStore)
+        let contentView = AppView(store: buildDependecies())
 
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {
@@ -69,6 +60,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Called as the scene transitions from the foreground to the background.
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
+    }
+    
+    func buildDependecies() -> Store<AppState, AppAction>  {
+        Store(
+            initialState: AppState(),
+            reducer: appReducer,
+            environment: AppEnvironment()
+        )
     }
 
 }

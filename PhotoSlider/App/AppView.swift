@@ -13,12 +13,16 @@ struct AppView: View {
     
     var body: some View {
         WithViewStore(self.store) { viewStore in
-            VStack {
-                Text("Root View")
-                    .padding()
+            ZStack {
+                switch viewStore.uiState {
+                case .slider:
+                    SliderView()
+                default:
+                    LoginView()
+                }
             }
             .onAppear(perform: {
-                viewStore.send(.validateUser)
+                viewStore.send(.validateSession)
             })
         }
     }

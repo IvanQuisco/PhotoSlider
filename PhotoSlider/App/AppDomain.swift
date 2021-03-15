@@ -27,20 +27,30 @@ enum AppAction: Equatable {
     case loginUser
     case registerUser
     case userAuthenticated
-    case validateUser
+    case validateSession
 }
 
-struct AppEnvironment {}
+struct AppEnvironment {
+    let firebaseManager = FirebaseManager()
+}
 
 let appReducer = Reducer<AppState, AppAction, AppEnvironment> { state, action, environment in
     switch action {
+    
     case .loginUser:
         return .none
+        
     case .registerUser:
         return .none
+        
     case .userAuthenticated:
+        state.uiState = .slider
         return .none
-    case .validateUser:
+        
+    case .validateSession:
+        if environment.firebaseManager.validateSession {
+            return Effect(value: .userAuthenticated)
+        }
         return .none
     }
 }
