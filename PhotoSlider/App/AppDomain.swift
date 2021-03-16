@@ -34,7 +34,9 @@ struct AppEnvironment {
     let firebaseManager = FirebaseManager()
 }
 
-let appReducer = Reducer<AppState, AppAction, AppEnvironment> { state, action, environment in
+typealias AppReducer = Reducer<AppState, AppAction, AppEnvironment>
+
+let appReducer = AppReducer { state, action, environment in
     switch action {
     
     case .loginUser:
