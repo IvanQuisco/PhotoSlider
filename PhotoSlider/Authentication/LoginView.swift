@@ -16,7 +16,6 @@ struct LoginView: View {
         WithViewStore(store) { viewStore in
             NavigationView {
                 VStack {
-                    
                     VStack(spacing: 20) {
                         TextField(
                             "Email",
@@ -40,7 +39,7 @@ struct LoginView: View {
                         .keyboardType(.asciiCapable)
                         .textContentType(.password)
                     }
-                    .padding(.top, 80)
+                    .padding(.top, 60)
                     
                     Spacer()
                     
@@ -49,26 +48,25 @@ struct LoginView: View {
                             viewStore.send(.loginButtonTapped)
                         } label: {
                             Text("Log In")
-                                .font(.title)
+                                .font(.title3)
                                 .foregroundColor(.white)
                         }
                         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 50)
-                        .background(Color.green)
+                        .background( viewStore.isLogInButtonEnabled ? Color.green : Color.gray)
                         .cornerRadius(10)
+                        .disabled(!viewStore.isLogInButtonEnabled)
                         
-                        Button {
-                            viewStore.send(.signUpButtonTapped)
-                        } label: {
-                            Text("Sign Up")
-                                .font(.title)
-                                .foregroundColor(.white)
-                        }
+                        NavigationLink(
+                            destination: SignUpView(store: store),
+                            label: { Text("Sign Up") }
+                        )
+                        .font(.title3)
+                        .foregroundColor(.white)
                         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 50)
                         .background(Color.pink)
                         .cornerRadius(10)
                     }
-                    .padding(.bottom, 30
-                    )
+                    .padding(.bottom, 30)
 
                 }
                 .padding(.horizontal, 30)

@@ -24,6 +24,7 @@
 		2D83DC7326000CEC006501D6 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D83DC7226000CEC006501D6 /* LoginView.swift */; };
 		2D83DC7626000D74006501D6 /* SliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D83DC7526000D74006501D6 /* SliderView.swift */; };
 		2DB26A4D2605213C005F55AC /* AuthenticationDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB26A4C2605213C005F55AC /* AuthenticationDomain.swift */; };
+		2DB26A51260533B6005F55AC /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB26A50260533B6005F55AC /* SignUpView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +42,7 @@
 		2D83DC7226000CEC006501D6 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		2D83DC7526000D74006501D6 /* SliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderView.swift; sourceTree = "<group>"; };
 		2DB26A4C2605213C005F55AC /* AuthenticationDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationDomain.swift; sourceTree = "<group>"; };
+		2DB26A50260533B6005F55AC /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +113,7 @@
 			children = (
 				2DB26A4C2605213C005F55AC /* AuthenticationDomain.swift */,
 				2D83DC7226000CEC006501D6 /* LoginView.swift */,
+				2DB26A50260533B6005F55AC /* SignUpView.swift */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -240,6 +243,7 @@
 				2D04226925FFE75300D08798 /* AppView.swift in Sources */,
 				2DB26A4D2605213C005F55AC /* AuthenticationDomain.swift in Sources */,
 				2D458FDF260000CB00AEA191 /* AppDomain.swift in Sources */,
+				2DB26A51260533B6005F55AC /* SignUpView.swift in Sources */,
 				2D83DC7626000D74006501D6 /* SliderView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -384,6 +388,7 @@
 				DEVELOPMENT_TEAM = 737N65LX4C;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/PhotoSlider/Base/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -405,6 +410,7 @@
 				DEVELOPMENT_TEAM = 737N65LX4C;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/PhotoSlider/Base/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
