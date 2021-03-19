@@ -23,6 +23,7 @@
 		2D83DC652600094B006501D6 /* FirebaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D83DC642600094B006501D6 /* FirebaseManager.swift */; };
 		2D83DC7326000CEC006501D6 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D83DC7226000CEC006501D6 /* LoginView.swift */; };
 		2D83DC7626000D74006501D6 /* SliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D83DC7526000D74006501D6 /* SliderView.swift */; };
+		2DB26A4D2605213C005F55AC /* AuthenticationDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB26A4C2605213C005F55AC /* AuthenticationDomain.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +40,7 @@
 		2D83DC642600094B006501D6 /* FirebaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseManager.swift; sourceTree = "<group>"; };
 		2D83DC7226000CEC006501D6 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		2D83DC7526000D74006501D6 /* SliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderView.swift; sourceTree = "<group>"; };
+		2DB26A4C2605213C005F55AC /* AuthenticationDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationDomain.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 		2D458FD925FFFFC400AEA191 /* Authentication */ = {
 			isa = PBXGroup;
 			children = (
+				2DB26A4C2605213C005F55AC /* AuthenticationDomain.swift */,
 				2D83DC7226000CEC006501D6 /* LoginView.swift */,
 			);
 			path = Authentication;
@@ -235,6 +238,7 @@
 				2D04226725FFE75300D08798 /* SceneDelegate.swift in Sources */,
 				2D83DC652600094B006501D6 /* FirebaseManager.swift in Sources */,
 				2D04226925FFE75300D08798 /* AppView.swift in Sources */,
+				2DB26A4D2605213C005F55AC /* AuthenticationDomain.swift in Sources */,
 				2D458FDF260000CB00AEA191 /* AppDomain.swift in Sources */,
 				2D83DC7626000D74006501D6 /* SliderView.swift in Sources */,
 			);

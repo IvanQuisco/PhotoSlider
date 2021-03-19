@@ -8,11 +8,6 @@
 import Foundation
 import ComposableArchitecture
 
-struct User {
-    let email: String
-    let password: String
-}
-
 enum UIState: Hashable {
     case login
     case registration
@@ -21,6 +16,7 @@ enum UIState: Hashable {
 
 struct AppState: Equatable {
     var uiState: UIState = .login
+    var authState: AuthState = .init()
 }
 
 enum AppAction: Equatable {
@@ -28,31 +24,45 @@ enum AppAction: Equatable {
     case registerUser
     case userAuthenticated
     case validateSession
+    case authAction(AuthAction)
 }
 
 struct AppEnvironment {
-    let firebaseManager = FirebaseManager()
+    var firebaseManager = FirebaseManager()
 }
 
 typealias AppReducer = Reducer<AppState, AppAction, AppEnvironment>
 
-let appReducer = AppReducer { state, action, environment in
-    switch action {
-    
-    case .loginUser:
-        return .none
-        
-    case .registerUser:
-        return .none
-        
-    case .userAuthenticated:
-        state.uiState = .slider
-        return .none
-        
-    case .validateSession:
-        if environment.firebaseManager.validateSession {
-            return Effect(value: .userAuthenticated)
+let appReducer = AppReducer.combine(
+    authReducer.pullback(
+        state: \.authState,
+        action: /AppAction.authAction,
+        environment: { env -> AuthEnvironment in
+            .init(firebaseManager: env.firebaseManager)
         }
-        return .none
+    ),
+    .init { state, action, environment in
+        switch action {
+        
+        case .loginUser:
+            return .none
+            
+        case .registerUser:
+            return .none
+            
+        case .userAuthenticated:
+            state.uiState = .slider
+            return .none
+            
+        case .validateSession:
+            if environment.firebaseManager.isUserLoggedIn {
+                return Effect(value: .userAuthenticated)
+            }
+            return .none
+            
+        case .authAction(_):
+            return .none
+        }
     }
-}
+
+)

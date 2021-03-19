@@ -18,7 +18,12 @@ struct AppView: View {
                 case .slider:
                     SliderView()
                 default:
-                    LoginView()
+                    LoginView(
+                        store: store.scope(
+                            state: { $0.authState },
+                            action: AppAction.authAction
+                        )
+                    )
                 }
             }
             .onAppear(perform: {

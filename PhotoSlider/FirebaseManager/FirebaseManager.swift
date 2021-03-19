@@ -13,7 +13,7 @@ import Firebase
 struct FirebaseManager {
     let auth = Auth.auth()
     
-    var validateSession: Bool {
+    var isUserLoggedIn: Bool {
         auth.currentUser != nil
     }
 }
