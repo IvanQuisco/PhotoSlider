@@ -25,6 +25,8 @@
 		2D83DC7626000D74006501D6 /* SliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D83DC7526000D74006501D6 /* SliderView.swift */; };
 		2DB26A4D2605213C005F55AC /* AuthenticationDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB26A4C2605213C005F55AC /* AuthenticationDomain.swift */; };
 		2DB26A51260533B6005F55AC /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB26A50260533B6005F55AC /* SignUpView.swift */; };
+		2DB26A56260646ED005F55AC /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB26A55260646ED005F55AC /* Utilities.swift */; };
+		2DB26A5926065939005F55AC /* Auth+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB26A5826065939005F55AC /* Auth+ext.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +45,8 @@
 		2D83DC7526000D74006501D6 /* SliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderView.swift; sourceTree = "<group>"; };
 		2DB26A4C2605213C005F55AC /* AuthenticationDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationDomain.swift; sourceTree = "<group>"; };
 		2DB26A50260533B6005F55AC /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
+		2DB26A55260646ED005F55AC /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		2DB26A5826065939005F55AC /* Auth+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Auth+ext.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +84,7 @@
 		2D04226325FFE75300D08798 /* PhotoSlider */ = {
 			isa = PBXGroup;
 			children = (
+				2DB26A54260646E3005F55AC /* Shared */,
 				2D458FDB2600001300AEA191 /* Base */,
 				2D458FDD2600009B00AEA191 /* FirebaseManager */,
 				2D458FD825FFFFB700AEA191 /* App */,
@@ -149,9 +154,18 @@
 		2D458FDD2600009B00AEA191 /* FirebaseManager */ = {
 			isa = PBXGroup;
 			children = (
+				2DB26A5826065939005F55AC /* Auth+ext.swift */,
 				2D83DC642600094B006501D6 /* FirebaseManager.swift */,
 			);
 			path = FirebaseManager;
+			sourceTree = "<group>";
+		};
+		2DB26A54260646E3005F55AC /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				2DB26A55260646ED005F55AC /* Utilities.swift */,
+			);
+			path = Shared;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -238,12 +252,14 @@
 			files = (
 				2D83DC7326000CEC006501D6 /* LoginView.swift in Sources */,
 				2D04226525FFE75300D08798 /* AppDelegate.swift in Sources */,
+				2DB26A5926065939005F55AC /* Auth+ext.swift in Sources */,
 				2D04226725FFE75300D08798 /* SceneDelegate.swift in Sources */,
 				2D83DC652600094B006501D6 /* FirebaseManager.swift in Sources */,
 				2D04226925FFE75300D08798 /* AppView.swift in Sources */,
 				2DB26A4D2605213C005F55AC /* AuthenticationDomain.swift in Sources */,
 				2D458FDF260000CB00AEA191 /* AppDomain.swift in Sources */,
 				2DB26A51260533B6005F55AC /* SignUpView.swift in Sources */,
+				2DB26A56260646ED005F55AC /* Utilities.swift in Sources */,
 				2D83DC7626000D74006501D6 /* SliderView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

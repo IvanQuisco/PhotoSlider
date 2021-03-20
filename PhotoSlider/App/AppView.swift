@@ -15,7 +15,7 @@ struct AppView: View {
         WithViewStore(self.store) { viewStore in
             ZStack {
                 switch viewStore.uiState {
-                case .slider:
+                case .home:
                     SliderView()
                 default:
                     LoginView(
@@ -37,7 +37,7 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         AppView(
             store: Store(
-                initialState: AppState(uiState: .login),
+                initialState: AppState(uiState: .auth),
                 reducer: appReducer,
                 environment: AppEnvironment()
             )

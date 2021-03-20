@@ -34,7 +34,7 @@ struct AuthState: Equatable {
     }
 }
 
-enum AuthAction: Equatable {
+enum AuthAction: Equatable {    
     case loginEmail(String)
     case loginPassword(String)
     case loginButtonTapped
@@ -44,6 +44,8 @@ enum AuthAction: Equatable {
     case signUpPasswordConfirmation(String)
     case signUpButtonTapped
     case createNewUser
+    
+    case authResponse(Result<FireResponse, FireError>)
 }
 
 struct AuthEnvironment {
@@ -66,7 +68,24 @@ let authReducer = AuthReducer { state, action, environment in
         return .none
         
     case .loginButtonTapped:
-        // TODO firebase login with state.loginUser
+        return environment
+            .firebaseManager
+            .login(userRequest: state.loginUser)
+            .catchToEffect()
+            .map(AuthAction.authResponse)
+        
+    case let .authResponse(result):
+        switch result {
+        case let .success(.loginSuccess(data)):
+            print(data.user.email ?? "not email found? 🤔")
+            
+        case .success(.userCreated):
+            print("user created")
+            
+        case let .failure(error):
+            print(error)
+        
+        }
         return .none
 
     // MARK: -  Sign up
@@ -93,4 +112,3 @@ let authReducer = AuthReducer { state, action, environment in
         return .none
     }
 }
-.debug()

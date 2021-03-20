@@ -9,13 +9,12 @@ import Foundation
 import ComposableArchitecture
 
 enum UIState: Hashable {
-    case login
-    case registration
-    case slider
+    case auth
+    case home
 }
 
 struct AppState: Equatable {
-    var uiState: UIState = .login
+    var uiState: UIState = .auth
     var authState: AuthState = .init()
 }
 
@@ -51,7 +50,7 @@ let appReducer = AppReducer.combine(
             return .none
             
         case .userAuthenticated:
-            state.uiState = .slider
+            state.uiState = .home
             return .none
             
         case .validateSession:
@@ -60,7 +59,13 @@ let appReducer = AppReducer.combine(
             }
             return .none
             
-        case .authAction(_):
+        case let .authAction(action):
+            switch action {
+            case .authResponse(.success(.loginSuccess(_))):
+                state.uiState = .home
+            default:
+                break
+            }
             return .none
         }
     }

@@ -9,11 +9,14 @@ import Foundation
 import Combine
 import Firebase
 
-
-struct FirebaseManager {
+class FirebaseManager {
     let auth = Auth.auth()
     
     var isUserLoggedIn: Bool {
         auth.currentUser != nil
+    }
+    
+    func login(userRequest: User) -> AnyPublisher<FireResponse, FireError> {
+        auth.signIn(email: userRequest.email, password: userRequest.password)
     }
 }
