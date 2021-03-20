@@ -64,13 +64,18 @@ let appReducer = AppReducer.combine(
             
         case .validateSession:
             if environment.firebaseManager.isUserLoggedIn {
+                state.authState.loginUser.email = environment.firebaseManager.getCurrentUser()?.email ?? ""
                 return Effect(value: .userAuthenticated)
             }
             return .none
             
         case let .authAction(action):
             switch action {
-            case .authResponse(.success(.loginSuccess(_))):
+            case let .authResponse(.success(.loginSuccess(data))):
+                state.sliderState.currentUser = data.user
+                state.uiState = .home
+            case let .authResponse(.success(.userCreated(data))):
+                state.sliderState.currentUser = data.user
                 state.uiState = .home
             default:
                 break

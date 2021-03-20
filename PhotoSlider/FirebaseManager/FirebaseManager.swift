@@ -28,4 +28,12 @@ class FirebaseManager {
             return .failure(.logOutError)
         }
     }
+    
+    func createUser(userRequest: User) -> AnyPublisher<FireResponse, FireError> {
+        auth.createUser(email: userRequest.email, password: userRequest.password)
+    }
+    
+    func getCurrentUser() -> Firebase.User? {
+        return auth.currentUser
+    }
 }

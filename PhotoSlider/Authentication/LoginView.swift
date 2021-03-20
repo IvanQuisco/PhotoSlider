@@ -26,6 +26,7 @@ struct LoginView: View {
                         )
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .keyboardType(.emailAddress)
+                        .autocapitalization(.none)
                         .cornerRadius(10)
                         
                         SecureField(

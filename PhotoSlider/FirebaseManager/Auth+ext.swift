@@ -22,7 +22,7 @@ public enum FireError: Error, Equatable {
 
 public enum FireResponse: Equatable {
     case loginSuccess(AuthDataResult)
-    case userCreated
+    case userCreated(AuthDataResult)
     case logOut
 }
 
@@ -36,6 +36,19 @@ extension Auth {
                     promise(.success(.loginSuccess(auth)))
                 }
             })
+        }.eraseToAnyPublisher()
+    }
+    
+    public func createUser(email: String, password: String) -> AnyPublisher<FireResponse, FireError> {
+        Future<FireResponse, FireError> { [weak self] promise in
+            self?.createUser(withEmail: email, password: password, completion: { (auth, error) in
+                if let error = error {
+                    promise(.failure(.init(error)))
+                } else if let auth = auth {
+                    promise(.success(.userCreated(auth)))
+                }
+            })
+            
         }.eraseToAnyPublisher()
     }
 }

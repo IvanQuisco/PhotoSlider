@@ -39,12 +39,21 @@ struct SliderView: View {
                     }
                 }
                 .navigationBarTitle("Home", displayMode: .large)
-                .navigationBarItems(trailing: Button(action: {
-                    viewStore.send(.logOut)
-                }, label: {
-                    Text("Log out")
-                }))
+                .navigationBarItems(trailing:
+                                        VStack {
+                                            Button(action: {
+                                                viewStore.send(.logOut)
+                                            }, label: {
+                                                Text("Log out")
+                                            })
+                                            Text(viewStore.currentUser?.email ?? "")
+                                                .font(.caption2)
+                                        }
+                )
             }
+            .onAppear(perform: {
+                viewStore.send(.onAppear)
+            })
         }
     }
 }

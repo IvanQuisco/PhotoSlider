@@ -73,23 +73,6 @@ let authReducer = AuthReducer { state, action, environment in
             .login(userRequest: state.loginUser)
             .catchToEffect()
             .map(AuthAction.authResponse)
-        
-    case let .authResponse(result):
-        switch result {
-        case let .success(.loginSuccess(data)):
-            print(data.user.email ?? "not email found? 🤔")
-            
-        case .success(.userCreated):
-            print("user created")
-            
-        case let .failure(error):
-            print(error)
-            
-        default:
-            break
-        }
-        
-        return .none
 
     // MARK: -  Sign up
         
@@ -108,10 +91,35 @@ let authReducer = AuthReducer { state, action, environment in
         return .none
         
     case .signUpButtonTapped:
-        // TODO present sign up screen
-        return .none
+        return environment
+            .firebaseManager
+            .createUser(userRequest: state.newUser)
+            .catchToEffect()
+            .map(AuthAction.authResponse)
         
     case .createNewUser:
+        return .none
+        
+    // MARK: - Firebase task Response
+    
+    case let .authResponse(result):
+        switch result {
+        case let .success(.loginSuccess(data)):
+            state.loginUser.password = ""
+            
+        case let .success(.userCreated(data)):
+            state.newUser = User()
+            state.loginUser = User(email: data.user.email ?? "", password: "")
+            state.passwordConfirmation = ""
+            
+        case let .failure(error):
+            // User feedback
+            print(error)
+            
+        default:
+            break
+        }
+        
         return .none
     }
 }

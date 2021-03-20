@@ -25,6 +25,7 @@ struct SignUpView: View {
                     )
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .keyboardType(.emailAddress)
+                    .autocapitalization(.none)
                     .cornerRadius(10)
                     
                     SecureField(
@@ -52,12 +53,10 @@ struct SignUpView: View {
                     if !viewStore.signUpMatchingPasswords &&
                         viewStore.newUser.validCretentials &&
                         !viewStore.passwordConfirmation.isEmpty {
-                        Text("Password do not match")
+                        Text("Passwords do not match")
                             .foregroundColor(.orange)
                             .font(.caption2)
                     }
-                    
-
                 }
                 .padding(.top, 60)
                 
