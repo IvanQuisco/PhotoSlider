@@ -78,6 +78,12 @@ let appReducer = AppReducer.combine(
             return .none
             
         case let .sliderAction(action):
+            switch action {
+            case .logOutResult(.success(_)):
+                state.uiState = .auth
+            default:
+                break
+            }
             return .none
         }
     }

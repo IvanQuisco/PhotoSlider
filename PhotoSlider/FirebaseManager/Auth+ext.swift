@@ -13,6 +13,7 @@ public enum FireError: Error, Equatable {
     case callError
     case noConnection
     case unknown
+    case logOutError
     
     init(_ error: Error) {
         self = .unknown
@@ -22,6 +23,7 @@ public enum FireError: Error, Equatable {
 public enum FireResponse: Equatable {
     case loginSuccess(AuthDataResult)
     case userCreated
+    case logOut
 }
 
 extension Auth {

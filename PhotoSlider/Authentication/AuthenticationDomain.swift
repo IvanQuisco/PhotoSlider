@@ -84,8 +84,11 @@ let authReducer = AuthReducer { state, action, environment in
             
         case let .failure(error):
             print(error)
-        
+            
+        default:
+            break
         }
+        
         return .none
 
     // MARK: -  Sign up

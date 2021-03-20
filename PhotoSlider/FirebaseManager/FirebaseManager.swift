@@ -19,4 +19,13 @@ class FirebaseManager {
     func login(userRequest: User) -> AnyPublisher<FireResponse, FireError> {
         auth.signIn(email: userRequest.email, password: userRequest.password)
     }
+    
+    func logOut() -> Result<FireResponse, FireError> {
+        do {
+            try auth.signOut()
+            return .success(.logOut)
+        } catch {
+            return .failure(.logOutError)
+        }
+    }
 }

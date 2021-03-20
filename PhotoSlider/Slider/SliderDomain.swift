@@ -14,6 +14,7 @@ struct SliderState: Equatable {
 
 enum SliderAction: Equatable {
     case logOut
+    case logOutResult(Result<FireResponse, FireError>)
 }
 
 struct SliderEnvironmnet {
@@ -25,7 +26,14 @@ typealias SliderReducer = Reducer<SliderState, SliderAction, SliderEnvironmnet>
 let sliderReducer = SliderReducer { state, action, environment in
     switch action {
     case .logOut:
-        print("TODO: perform log out")
+        return environment
+            .firebaseManager
+            .logOut()
+            .publisher
+            .catchToEffect()
+            .map(SliderAction.logOutResult)
+        
+    case let .logOutResult(result):
         return .none
     }
 }
