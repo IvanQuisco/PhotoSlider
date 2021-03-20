@@ -16,7 +16,12 @@ struct AppView: View {
             ZStack {
                 switch viewStore.uiState {
                 case .home:
-                    SliderView()
+                    SliderView(
+                        store: store.scope(
+                            state: { $0.sliderState },
+                            action: AppAction.sliderAction
+                        )
+                    )
                 default:
                     LoginView(
                         store: store.scope(

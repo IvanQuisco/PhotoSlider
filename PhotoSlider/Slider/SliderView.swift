@@ -6,10 +6,11 @@
 //
 
 import SwiftUI
+import ComposableArchitecture
 
 struct SliderView: View {
     
-    let data = Array(1...10).map { "item \($0)" }
+    let store: Store<SliderState, SliderAction>
     
     let layout = [
         GridItem(.flexible(minimum: 150)),
@@ -17,22 +18,32 @@ struct SliderView: View {
     ]
     
     var body: some View {
-        VStack {
-            ScrollView {
-                LazyVGrid(columns: layout, content: {
-                    ForEach(data, id: \.self) { item in
-                        Image("image_placeholder")
-                            .resizable()
-                            .scaledToFit()
-                            .cornerRadius(50)
-                            .frame(height: 150)
-                            .foregroundColor(.green)
+        WithViewStore(store) { viewStore in
+            NavigationView {
+                VStack {
+                    ScrollView {
+                        LazyVGrid(columns: layout, content: {
+                            ForEach(viewStore.imageDataSource, id: \.self) { item in
+                                Image("image_placeholder")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .cornerRadius(50)
+                                    .frame(height: 150)
+                                    .foregroundColor(.green)
+                            }
+                        })
+                        .padding(10)
                     }
-                })
-                .padding(10)
-            }
-            Button("Add") {
-                print("TODO: open image picker")
+                    Button("Add") {
+                        print("TODO: open image picker")
+                    }
+                }
+                .navigationBarTitle("Home", displayMode: .large)
+                .navigationBarItems(trailing: Button(action: {
+                    viewStore.send(.logOut)
+                }, label: {
+                    Text("Log out")
+                }))
             }
         }
     }
@@ -40,6 +51,12 @@ struct SliderView: View {
 
 struct SliderView_Previews: PreviewProvider {
     static var previews: some View {
-        SliderView()
+        SliderView(
+            store: Store(
+                initialState: SliderState(),
+                reducer: sliderReducer,
+                environment: SliderEnvironmnet(firebaseManager: FirebaseManager())
+            )
+        )
     }
 }

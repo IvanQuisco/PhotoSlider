@@ -16,6 +16,7 @@ enum UIState: Hashable {
 struct AppState: Equatable {
     var uiState: UIState = .auth
     var authState: AuthState = .init()
+    var sliderState: SliderState = .init()
 }
 
 enum AppAction: Equatable {
@@ -24,6 +25,7 @@ enum AppAction: Equatable {
     case userAuthenticated
     case validateSession
     case authAction(AuthAction)
+    case sliderAction(SliderAction)
 }
 
 struct AppEnvironment {
@@ -37,6 +39,13 @@ let appReducer = AppReducer.combine(
         state: \.authState,
         action: /AppAction.authAction,
         environment: { env -> AuthEnvironment in
+            .init(firebaseManager: env.firebaseManager)
+        }
+    ),
+    sliderReducer.pullback(
+        state: \.sliderState,
+        action: /AppAction.sliderAction,
+        environment: { env -> SliderEnvironmnet in
             .init(firebaseManager: env.firebaseManager)
         }
     ),
@@ -66,6 +75,9 @@ let appReducer = AppReducer.combine(
             default:
                 break
             }
+            return .none
+            
+        case let .sliderAction(action):
             return .none
         }
     }

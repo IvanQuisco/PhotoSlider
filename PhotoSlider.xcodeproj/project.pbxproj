@@ -27,6 +27,7 @@
 		2DB26A51260533B6005F55AC /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB26A50260533B6005F55AC /* SignUpView.swift */; };
 		2DB26A56260646ED005F55AC /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB26A55260646ED005F55AC /* Utilities.swift */; };
 		2DB26A5926065939005F55AC /* Auth+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB26A5826065939005F55AC /* Auth+ext.swift */; };
+		2DB26A5E26066822005F55AC /* SliderDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB26A5D26066822005F55AC /* SliderDomain.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +48,7 @@
 		2DB26A50260533B6005F55AC /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		2DB26A55260646ED005F55AC /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		2DB26A5826065939005F55AC /* Auth+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Auth+ext.swift"; sourceTree = "<group>"; };
+		2DB26A5D26066822005F55AC /* SliderDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderDomain.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,6 +128,7 @@
 		2D458FDA25FFFFE000AEA191 /* Slider */ = {
 			isa = PBXGroup;
 			children = (
+				2DB26A5D26066822005F55AC /* SliderDomain.swift */,
 				2D83DC7526000D74006501D6 /* SliderView.swift */,
 			);
 			path = Slider;
@@ -254,6 +257,7 @@
 				2D04226525FFE75300D08798 /* AppDelegate.swift in Sources */,
 				2DB26A5926065939005F55AC /* Auth+ext.swift in Sources */,
 				2D04226725FFE75300D08798 /* SceneDelegate.swift in Sources */,
+				2DB26A5E26066822005F55AC /* SliderDomain.swift in Sources */,
 				2D83DC652600094B006501D6 /* FirebaseManager.swift in Sources */,
 				2D04226925FFE75300D08798 /* AppView.swift in Sources */,
 				2DB26A4D2605213C005F55AC /* AuthenticationDomain.swift in Sources */,
