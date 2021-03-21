@@ -64,7 +64,7 @@ struct SliderView_Previews: PreviewProvider {
             store: Store(
                 initialState: SliderState(),
                 reducer: sliderReducer,
-                environment: SliderEnvironmnet(firebaseManager: FirebaseManager())
+                environment: .default
             )
         )
     }

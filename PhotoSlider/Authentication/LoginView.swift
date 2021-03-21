@@ -83,7 +83,7 @@ struct LoginView_Previews: PreviewProvider {
             store: Store(
                 initialState: AuthState(),
                 reducer: authReducer,
-                environment: AuthEnvironment(firebaseManager: FirebaseManager())
+                environment: .default
             )
         )
     }

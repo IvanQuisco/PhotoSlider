@@ -50,6 +50,14 @@ enum AuthAction: Equatable {
 
 struct AuthEnvironment {
     var firebaseManager: FirebaseManager
+    var mainQueue: AnySchedulerOf<DispatchQueue>
+}
+
+extension AuthEnvironment {
+    static let `default` = Self.init(
+        firebaseManager: FirebaseManager(),
+        mainQueue: DispatchQueue.main.eraseToAnyScheduler()
+    )
 }
 
 typealias AuthReducer = Reducer<AuthState, AuthAction, AuthEnvironment>

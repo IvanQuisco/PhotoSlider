@@ -22,6 +22,14 @@ enum SliderAction: Equatable {
 
 struct SliderEnvironmnet {
     var firebaseManager: FirebaseManager
+    var mainQueue: AnySchedulerOf<DispatchQueue>
+}
+
+extension SliderEnvironmnet {
+    static let `default` = Self.init(
+        firebaseManager: FirebaseManager(),
+        mainQueue: DispatchQueue.main.eraseToAnyScheduler()
+    )
 }
 
 typealias SliderReducer = Reducer<SliderState, SliderAction, SliderEnvironmnet>

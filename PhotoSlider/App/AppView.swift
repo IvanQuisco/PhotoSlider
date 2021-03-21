@@ -44,7 +44,7 @@ struct ContentView_Previews: PreviewProvider {
             store: Store(
                 initialState: AppState(uiState: .auth),
                 reducer: appReducer,
-                environment: AppEnvironment()
+                environment: .default
             )
         )
     }

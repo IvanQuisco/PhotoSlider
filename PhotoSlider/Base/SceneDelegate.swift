@@ -66,7 +66,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         Store(
             initialState: AppState(),
             reducer: appReducer,
-            environment: AppEnvironment()
+            environment: AppEnvironment(
+                firebaseManager: FirebaseManager(),
+                mainQueue: DispatchQueue.main.eraseToAnyScheduler()
+            )
         )
     }
 

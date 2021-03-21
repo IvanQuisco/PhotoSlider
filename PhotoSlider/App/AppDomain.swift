@@ -29,7 +29,15 @@ enum AppAction: Equatable {
 }
 
 struct AppEnvironment {
-    var firebaseManager = FirebaseManager()
+    var firebaseManager: FirebaseManager
+    var mainQueue: AnySchedulerOf<DispatchQueue>
+}
+
+extension AppEnvironment {
+    static let `default` = Self.init(
+        firebaseManager: FirebaseManager(),
+        mainQueue: DispatchQueue.main.eraseToAnyScheduler()
+    )
 }
 
 typealias AppReducer = Reducer<AppState, AppAction, AppEnvironment>
@@ -39,14 +47,20 @@ let appReducer = AppReducer.combine(
         state: \.authState,
         action: /AppAction.authAction,
         environment: { env -> AuthEnvironment in
-            .init(firebaseManager: env.firebaseManager)
+            .init(
+                firebaseManager: env.firebaseManager,
+                mainQueue: env.mainQueue
+            )
         }
     ),
     sliderReducer.pullback(
         state: \.sliderState,
         action: /AppAction.sliderAction,
         environment: { env -> SliderEnvironmnet in
-            .init(firebaseManager: env.firebaseManager)
+            .init(
+                firebaseManager: env.firebaseManager,
+                mainQueue: env.mainQueue
+            )
         }
     ),
     .init { state, action, environment in
