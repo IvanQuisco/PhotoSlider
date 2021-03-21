@@ -11,16 +11,12 @@ import ComposableArchitecture
 struct SliderView: View {
     
     let store: Store<SliderState, SliderAction>
-    
-    @State private var isShowPhotoLibrary = false
-    
-    @State var selectedImageData: Data?
-    
+
     let layout = [
         GridItem(.flexible(minimum: 150)),
         GridItem(.flexible(minimum: 150))
     ]
-    
+
     var body: some View {
         WithViewStore(store) { viewStore in
             NavigationView {
@@ -39,11 +35,11 @@ struct SliderView: View {
                         .padding(10)
                     }
 
-                    if let imageData = self.selectedImageData, let image = UIImage(data: imageData) {
+                    if let imageData = viewStore.selectedImageData, let image = UIImage(data: imageData) {
                         SelectedImageView(
                             image: image,
-                            onUploadButtonTap: { print("upload") },
-                            onCancelButtonTap: { print("cancel") }
+                            onUploadButtonTap: { viewStore.send(.uploadPhotoButtonTapped) },
+                            onCancelButtonTap: { viewStore.send(.cancelButtonTapped) }
                         )
                         .padding(.bottom, 10)
                     } else {
@@ -51,14 +47,25 @@ struct SliderView: View {
                             title: "Photo",
                             image: Image(systemName: "photo"),
                             backgroundColor: Color.blue,
-                            onTap: { self.isShowPhotoLibrary = true }
+                            onTap: { viewStore.send(.presentPickerButtonTapped(true)) }
                         )
                         .padding(.bottom, 10)
                     }
      
                 }
-                .sheet(isPresented: $isShowPhotoLibrary) {
-                    CustomImagePickerView(sourceType: .photoLibrary, selectedImage: self.$selectedImageData)
+                .sheet(
+                    isPresented: viewStore.binding(
+                        get: { $0.isPickerViewPresented },
+                        send: SliderAction.presentPickerButtonTapped(false)
+                    )
+                ) {
+                    CustomImagePickerView(
+                        sourceType: .photoLibrary,
+                        selectedImage: viewStore.binding(
+                            get: { $0.selectedImageData },
+                            send: { SliderAction.imageData($0) }
+                        )
+                    )
                 }
                 .navigationBarTitle("Home", displayMode: .large)
                 .navigationBarItems(trailing:
@@ -79,7 +86,7 @@ struct SliderView: View {
         }
     }
     
-    
+
     struct SelectedImageView: View {
         let image: UIImage
 
@@ -123,7 +130,7 @@ struct SliderView: View {
             }
         }
     }
-    
+
     struct ActionButton: View {
         var title: String
         var image: Image
