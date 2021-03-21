@@ -12,6 +12,10 @@ struct SliderView: View {
     
     let store: Store<SliderState, SliderAction>
     
+    @State private var isShowPhotoLibrary = false
+    
+    @State var selectedImageData: Data?
+    
     let layout = [
         GridItem(.flexible(minimum: 150)),
         GridItem(.flexible(minimum: 150))
@@ -34,9 +38,27 @@ struct SliderView: View {
                         })
                         .padding(10)
                     }
-                    Button("Add") {
-                        print("TODO: open image picker")
+
+                    if let imageData = self.selectedImageData, let image = UIImage(data: imageData) {
+                        SelectedImageView(
+                            image: image,
+                            onUploadButtonTap: { print("upload") },
+                            onCancelButtonTap: { print("cancel") }
+                        )
+                        .padding(.bottom, 10)
+                    } else {
+                        ActionButton(
+                            title: "Photo",
+                            image: Image(systemName: "photo"),
+                            backgroundColor: Color.blue,
+                            onTap: { self.isShowPhotoLibrary = true }
+                        )
+                        .padding(.bottom, 10)
                     }
+     
+                }
+                .sheet(isPresented: $isShowPhotoLibrary) {
+                    CustomImagePickerView(sourceType: .photoLibrary, selectedImage: self.$selectedImageData)
                 }
                 .navigationBarTitle("Home", displayMode: .large)
                 .navigationBarItems(trailing:
@@ -54,6 +76,77 @@ struct SliderView: View {
             .onAppear(perform: {
                 viewStore.send(.onAppear)
             })
+        }
+    }
+    
+    
+    struct SelectedImageView: View {
+        let image: UIImage
+
+        var onUploadButtonTap: () -> Void
+        
+        var onCancelButtonTap: () -> Void
+        
+        let side: CGFloat = 200
+
+        var body: some View {
+            VStack(spacing: 5) {
+                Text("Selected Image:")
+                    .font(.footnote)
+                
+                HStack {
+                    Spacer()
+                    
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(minWidth: side, maxWidth: side, minHeight: side, maxHeight: side)
+                    
+                    Spacer()
+                }
+                
+                HStack {
+                    ActionButton(
+                        title: "Cancel",
+                        image: Image(systemName: "trash"),
+                        backgroundColor: Color.red,
+                        onTap: { onCancelButtonTap() }
+                    )
+                    
+                    ActionButton(
+                        title: "Upload",
+                        image: Image(systemName: "cloud"),
+                        backgroundColor: Color.green,
+                        onTap: { onUploadButtonTap() }
+                    )
+                }
+            }
+        }
+    }
+    
+    struct ActionButton: View {
+        var title: String
+        var image: Image
+        var backgroundColor: Color
+        var onTap: () -> Void
+        
+        var body: some View {
+            Button(action: {
+                onTap()
+            }) {
+                HStack {
+                    image
+                        .font(.system(size: 20))
+                    
+                    Text(title)
+                        .font(.headline)
+                }
+                .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: 50)
+                .background(backgroundColor)
+                .foregroundColor(.white)
+                .cornerRadius(20)
+                .padding(.horizontal)
+            }
         }
     }
 }
