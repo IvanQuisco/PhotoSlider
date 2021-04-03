@@ -7,6 +7,7 @@
 
 import SwiftUI
 import ComposableArchitecture
+import SDWebImageSwiftUI
 
 struct SliderView: View {
     
@@ -23,22 +24,10 @@ struct SliderView: View {
                 VStack {
                     ScrollView {
                         LazyVGrid(columns: layout, content: {
-                            ForEach(viewStore.imageDataSource, id: \.id) { item in
-                                if let image = UIImage(data: item.data) {
-                                    Image(uiImage: image)
+                            ForEach(viewStore.imageDataSource, id: \.self) { url in
+                                    WebImage(url: url)
                                         .resizable()
-                                        .aspectRatio(contentMode: .fit)
-//                                        .cornerRadius(50)
-                                        .frame(height: 150)
-                                        .foregroundColor(.green)
-                                } else {
-                                    Image("image_placeholder")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-//                                        .cornerRadius(50)
-                                        .frame(height: 150)
-                                        .foregroundColor(.green)
-                                }
+                                        .scaledToFit()
                             }
                         })
                         .padding(10)

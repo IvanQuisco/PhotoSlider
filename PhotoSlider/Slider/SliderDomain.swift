@@ -9,19 +9,9 @@ import Foundation
 import ComposableArchitecture
 import Firebase
 
-public struct IdentifiableData: Equatable {
-    let id: String
-    let data: Data
-    
-    init(id: String = UUID().uuidString, data: Data) {
-        self.id = id
-        self.data = data
-    }
-}
-
 struct SliderState: Equatable {
     
-    var imageDataSource: [IdentifiableData] = []
+    var imageDataSource: [URL] = []
     
     var currentUser: Firebase.User?
     
@@ -48,7 +38,7 @@ enum SliderAction: Equatable {
     
     //DownloadImages
     case getImages
-    case imagesDataReceived(Result<[IdentifiableData], StorageError>)
+    case imagesDataReceived(Result<[URL], StorageError>)
     case cancelImagesSubscription
 }
 

@@ -29,6 +29,7 @@
 		2DB26A56260646ED005F55AC /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB26A55260646ED005F55AC /* Utilities.swift */; };
 		2DB26A5926065939005F55AC /* Auth+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB26A5826065939005F55AC /* Auth+ext.swift */; };
 		2DB26A5E26066822005F55AC /* SliderDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB26A5D26066822005F55AC /* SliderDomain.swift */; };
+		2DFDE5E226182EE200D51493 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 2DFDE5E126182EE200D51493 /* SDWebImageSwiftUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2DFDE5E226182EE200D51493 /* SDWebImageSwiftUI in Frameworks */,
 				2D458FD225FFED3400AEA191 /* ComposableArchitecture in Frameworks */,
 				2D458FC825FFECBA00AEA191 /* FirebaseStorage in Frameworks */,
 				2D458FCA25FFECBA00AEA191 /* FirebaseAuth in Frameworks */,
@@ -196,6 +198,7 @@
 				2D458FCB25FFECBA00AEA191 /* FirebaseFirestore */,
 				2D458FCD25FFECBA00AEA191 /* FirebaseDatabase */,
 				2D458FD125FFED3400AEA191 /* ComposableArchitecture */,
+				2DFDE5E126182EE200D51493 /* SDWebImageSwiftUI */,
 			);
 			productName = PhotoSlider;
 			productReference = 2D04226125FFE75300D08798 /* PhotoSlider.app */;
@@ -227,6 +230,7 @@
 			packageReferences = (
 				2D458FC625FFECBA00AEA191 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				2D458FD025FFED3400AEA191 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				2DFDE5E026182EE200D51493 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 			);
 			productRefGroup = 2D04226225FFE75300D08798 /* Products */;
 			projectDirPath = "";
@@ -486,6 +490,14 @@
 				minimumVersion = 0.16.0;
 			};
 		};
+		2DFDE5E026182EE200D51493 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -513,6 +525,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2D458FD025FFED3400AEA191 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
 			productName = ComposableArchitecture;
+		};
+		2DFDE5E126182EE200D51493 /* SDWebImageSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2DFDE5E026182EE200D51493 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			productName = SDWebImageSwiftUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
