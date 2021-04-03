@@ -50,7 +50,3 @@ struct CustomImagePickerView: UIViewControllerRepresentable {
         }
     }
 }
-
-//extension CustomImagePickerView: UIImagePickerControllerDelegate {
-//
-//}

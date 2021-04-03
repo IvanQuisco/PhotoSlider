@@ -24,12 +24,21 @@ struct SliderView: View {
                     ScrollView {
                         LazyVGrid(columns: layout, content: {
                             ForEach(viewStore.imageDataSource, id: \.self) { item in
-                                Image("image_placeholder")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .cornerRadius(50)
-                                    .frame(height: 150)
-                                    .foregroundColor(.green)
+                                if let image = UIImage(data: item) {
+                                    Image(uiImage: image)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .cornerRadius(50)
+                                        .frame(height: 150)
+                                        .foregroundColor(.green)
+                                } else {
+                                    Image("image_placeholder")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .cornerRadius(50)
+                                        .frame(height: 150)
+                                        .foregroundColor(.green)
+                                }
                             }
                         })
                         .padding(10)

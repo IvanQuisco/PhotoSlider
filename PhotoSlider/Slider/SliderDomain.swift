@@ -10,7 +10,8 @@ import ComposableArchitecture
 import Firebase
 
 struct SliderState: Equatable {
-    var imageDataSource: [String] = Array(1...10).map { "item \($0)" }
+    
+    var imageDataSource: [Data] = []
     
     var currentUser: Firebase.User?
     
@@ -20,13 +21,24 @@ struct SliderState: Equatable {
 }
 
 enum SliderAction: Equatable {
+    
+    //LifeCycle
     case onAppear
+    
+    //Logout
     case logOut
     case logOutResult(Result<FireResponse, FireError>)
+    
+    //UploadImages
     case presentPickerButtonTapped(Bool)
     case uploadPhotoButtonTapped
     case cancelButtonTapped
     case imageData(Data?)
+    
+    //DownloadImages
+    case getImages
+    case imagesDataReceived(Result<[Data], StorageError>)
+    case cancelImagesSubscription
 }
 
 struct SliderEnvironmnet {
@@ -44,11 +56,34 @@ extension SliderEnvironmnet {
 typealias SliderReducer = Reducer<SliderState, SliderAction, SliderEnvironmnet>
 
 let sliderReducer = SliderReducer { state, action, environment in
+    struct ImagesSubscriptionID: Hashable {}
+    
     switch action {
     
     case .onAppear:
         state.currentUser = environment.firebaseManager.getCurrentUser()
+        return Effect(value: .getImages)
+        
+    case .getImages:
+        return environment
+            .firebaseManager
+            .downloadImages()
+            .catchToEffect()
+            .map(SliderAction.imagesDataReceived)
+            .cancellable(id: ImagesSubscriptionID())
+        
+    case let .imagesDataReceived(result):
+        switch  result {
+        case let .success(data):
+            state.imageDataSource = data
+        default:
+            break
+        }
         return .none
+        
+    case .cancelImagesSubscription:
+    
+    return Effect.cancel(id: ImagesSubscriptionID())
         
     case .logOut:
         return environment
@@ -67,6 +102,7 @@ let sliderReducer = SliderReducer { state, action, environment in
         
     case .uploadPhotoButtonTapped:
         print("TODO: Firebase storage task")
+        environment.firebaseManager.upload(imageData: state.selectedImageData!)
         return .none
         
     case .cancelButtonTapped:
