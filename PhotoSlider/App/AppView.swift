@@ -13,24 +13,29 @@ struct AppView: View {
     
     var body: some View {
         WithViewStore(self.store) { viewStore in
-            ZStack {
-                switch viewStore.uiState {
-                case .home:
-                    SliderView(
-                        store: store.scope(
-                            state: { $0.sliderState },
-                            action: AppAction.sliderAction
+            LoadingView(isShowing: viewStore.binding(
+                get: { $0.isActivityPresented },
+                send: { _ in AppAction.stopActivity }
+            ), content: {
+                ZStack {
+                    switch viewStore.uiState {
+                    case .home:
+                        SliderView(
+                            store: store.scope(
+                                state: { $0.sliderState },
+                                action: AppAction.sliderAction
+                            )
                         )
-                    )
-                default:
-                    LoginView(
-                        store: store.scope(
-                            state: { $0.authState },
-                            action: AppAction.authAction
+                    default:
+                        LoginView(
+                            store: store.scope(
+                                state: { $0.authState },
+                                action: AppAction.authAction
+                            )
                         )
-                    )
+                    }
                 }
-            }
+            })
             .onAppear(perform: {
                 viewStore.send(.validateSession)
             })

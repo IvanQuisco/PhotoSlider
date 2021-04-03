@@ -18,6 +18,8 @@ struct SliderState: Equatable {
     var isPickerViewPresented: Bool = false
     
     var selectedImageData: Data?
+    
+    var isActivityPresented: Bool = true
 }
 
 enum SliderAction: Equatable {
@@ -40,6 +42,8 @@ enum SliderAction: Equatable {
     case getImages
     case imagesDataReceived(Result<[URL], StorageError>)
     case cancelImagesSubscription
+    
+    case stopActivity
 }
 
 struct SliderEnvironmnet {
@@ -77,6 +81,7 @@ let sliderReducer = SliderReducer { state, action, environment in
     case let .imagesDataReceived(result):
         switch  result {
         case let .success(data):
+            state.isActivityPresented = false
             state.imageDataSource = data
         default:
             break
@@ -88,6 +93,7 @@ let sliderReducer = SliderReducer { state, action, environment in
     return Effect.cancel(id: ImagesSubscriptionID())
         
     case .logOut:
+        state.isActivityPresented = true
         return environment
             .firebaseManager
             .logOut()
@@ -98,6 +104,7 @@ let sliderReducer = SliderReducer { state, action, environment in
     case let .logOutResult(result):
         switch result {
         case .success:
+            state.isActivityPresented = false
             state.imageDataSource = []
         default:
             break
@@ -109,7 +116,9 @@ let sliderReducer = SliderReducer { state, action, environment in
         return .none
         
     case .uploadPhotoButtonTapped:
+        state.isActivityPresented = true
         guard let data = state.selectedImageData else {
+            state.isActivityPresented = false
             return .none
         }
         
@@ -137,6 +146,9 @@ let sliderReducer = SliderReducer { state, action, environment in
         
     case let .imageData(data):
         state.selectedImageData = data
+        return .none
+        
+    case .stopActivity:
         return .none
     }
 }

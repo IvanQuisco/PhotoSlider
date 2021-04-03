@@ -94,9 +94,15 @@ extension Storage {
                 if error != nil {
                     promise(.failure(.queryError))
                 } else {
+                    
                     let expected = list.items.count
                     var count = 0
                     var dataSource: [URL] = []
+                    
+                    if expected == 0 {
+                        promise(.success([]))
+                    }
+                    
                     for item in list.items {
                         let itemRef = self.reference().child("\(path)\(item.name)")
                         itemRef.downloadURL { (data, dataError) in

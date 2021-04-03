@@ -20,64 +20,70 @@ struct SliderView: View {
 
     var body: some View {
         WithViewStore(store) { viewStore in
-            NavigationView {
-                VStack {
-                    ScrollView {
-                        LazyVGrid(columns: layout, content: {
-                            ForEach(viewStore.imageDataSource, id: \.self) { url in
-                                    WebImage(url: url)
-                                        .resizable()
-                                        .scaledToFit()
-                            }
-                        })
-                        .padding(10)
-                    }
+            LoadingView(
+                isShowing: viewStore.binding(
+                    get: { $0.isActivityPresented },
+                    send: { _ in SliderAction.stopActivity }
+                ), content: {
+                NavigationView {
+                    VStack {
+                        ScrollView {
+                            LazyVGrid(columns: layout, content: {
+                                ForEach(viewStore.imageDataSource, id: \.self) { url in
+                                        WebImage(url: url)
+                                            .resizable()
+                                            .scaledToFit()
+                                }
+                            })
+                            .padding(10)
+                        }
 
-                    if let imageData = viewStore.selectedImageData, let image = UIImage(data: imageData) {
-                        SelectedImageView(
-                            image: image,
-                            onUploadButtonTap: { viewStore.send(.uploadPhotoButtonTapped) },
-                            onCancelButtonTap: { viewStore.send(.cancelButtonTapped) }
-                        )
-                        .padding(.bottom, 10)
-                    } else {
-                        ActionButton(
-                            title: "Photo",
-                            image: Image(systemName: "photo"),
-                            backgroundColor: Color.blue,
-                            onTap: { viewStore.send(.presentPickerButtonTapped(true)) }
-                        )
-                        .padding(.bottom, 10)
+                        if let imageData = viewStore.selectedImageData, let image = UIImage(data: imageData) {
+                            SelectedImageView(
+                                image: image,
+                                onUploadButtonTap: { viewStore.send(.uploadPhotoButtonTapped) },
+                                onCancelButtonTap: { viewStore.send(.cancelButtonTapped) }
+                            )
+                            .padding(.bottom, 10)
+                        } else {
+                            ActionButton(
+                                title: "Photo",
+                                image: Image(systemName: "photo"),
+                                backgroundColor: Color.blue,
+                                onTap: { viewStore.send(.presentPickerButtonTapped(true)) }
+                            )
+                            .padding(.bottom, 10)
+                        }
+         
                     }
-     
-                }
-                .sheet(
-                    isPresented: viewStore.binding(
-                        get: { $0.isPickerViewPresented },
-                        send: SliderAction.presentPickerButtonTapped(false)
-                    )
-                ) {
-                    CustomImagePickerView(
-                        sourceType: .photoLibrary,
-                        selectedImage: viewStore.binding(
-                            get: { $0.selectedImageData },
-                            send: { SliderAction.imageData($0) }
+                    .sheet(
+                        isPresented: viewStore.binding(
+                            get: { $0.isPickerViewPresented },
+                            send: SliderAction.presentPickerButtonTapped(false)
                         )
+                    ) {
+                        CustomImagePickerView(
+                            sourceType: .photoLibrary,
+                            selectedImage: viewStore.binding(
+                                get: { $0.selectedImageData },
+                                send: { SliderAction.imageData($0) }
+                            )
+                        )
+                    }
+                    .navigationBarTitle("Home", displayMode: .large)
+                    .navigationBarItems(trailing:
+                                            VStack {
+                                                Button(action: {
+                                                    viewStore.send(.logOut)
+                                                }, label: {
+                                                    Text("Log out")
+                                                })
+                                                Text(viewStore.currentUser?.email ?? "")
+                                                    .font(.caption2)
+                                            }
                     )
                 }
-                .navigationBarTitle("Home", displayMode: .large)
-                .navigationBarItems(trailing:
-                                        VStack {
-                                            Button(action: {
-                                                viewStore.send(.logOut)
-                                            }, label: {
-                                                Text("Log out")
-                                            })
-                                            Text(viewStore.currentUser?.email ?? "")
-                                                .font(.caption2)
-                                        }
-                )
-            }
+            })
             .onAppear(perform: {
                 viewStore.send(.onAppear)
             })
