@@ -43,7 +43,7 @@ class FirebaseManager {
         storage.uploadImage(data: data)
     }
     
-    func downloadImages() -> AnyPublisher<[IdentifiableData], StorageError> {
+    func downloadImages() -> AnyPublisher<[URL], StorageError> {
         let path = "images/profile/"
         return storage.getImagesData(for: path)
     }
@@ -79,8 +79,8 @@ extension Storage {
         }.eraseToAnyPublisher()
     }
     
-    public func getImagesData(for path: String) -> AnyPublisher<[IdentifiableData], StorageError> {
-        Future<[IdentifiableData], StorageError> { promise in
+    public func getImagesData(for path: String) -> AnyPublisher<[URL], StorageError> {
+        Future<[URL], StorageError> { promise in
             let ref  = self.reference().child(path)
             ref.listAll { (list, error) in
                 if error != nil {
@@ -88,13 +88,13 @@ extension Storage {
                 } else {
                     let expected = list.items.count
                     var count = 0
-                    var dataSource: [IdentifiableData] = []
+                    var dataSource: [URL] = []
                     for item in list.items {
                         let itemRef = self.reference().child("\(path)\(item.name)")
-                        itemRef.getData(maxSize: 1024*1024) { (data, dataError) in
+                        itemRef.downloadURL { (data, dataError) in
                             count += 1
                             if let url = data {
-                                dataSource.append(IdentifiableData(id: item.name, data: url))
+                                dataSource.append(url)
                                 if expected == count {
                                     promise(.success(dataSource.compactMap { $0 }))
                                 }
