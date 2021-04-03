@@ -96,6 +96,12 @@ let sliderReducer = SliderReducer { state, action, environment in
             .map(SliderAction.logOutResult)
         
     case let .logOutResult(result):
+        switch result {
+        case .success:
+            state.imageDataSource = []
+        default:
+            break
+        }
         return .none
         
     case let .presentPickerButtonTapped(value):

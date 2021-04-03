@@ -40,11 +40,18 @@ class FirebaseManager {
     }
     
     func uploadImage(data: Data) -> AnyPublisher<Void, StorageError> {
-        storage.uploadImage(data: data)
+        guard let user = auth.currentUser else {
+            return Fail(error: StorageError.invalidUser).eraseToAnyPublisher()
+        }
+        
+        return storage.uploadImage(userID: user.uid, imageData: data)
     }
     
     func downloadImages() -> AnyPublisher<[URL], StorageError> {
-        let path = "images/profile/"
+        guard let user = auth.currentUser else {
+            return Fail(error: StorageError.invalidUser).eraseToAnyPublisher()
+        }
+        let path = "\(user.uid)/photos/"
         return storage.getImagesData(for: path)
     }
 }
@@ -55,20 +62,21 @@ public enum StorageError: Error {
     case translationError
     case timeoutError
     case taskError
+    case invalidUser
 }
 
 
 extension Storage {
     
-    public func uploadImage(data: Data, name: String = UUID().uuidString) -> AnyPublisher<Void, StorageError> {
+    public func uploadImage(userID: String, imageData: Data, imageName: String = UUID().uuidString) -> AnyPublisher<Void, StorageError> {
         Future<Void, StorageError> { [weak self] promise in
             
-            let ref = self?.reference().child("images").child("profile").child(name)
+            let ref = self?.reference().child(userID).child("photos").child(imageName)
             
             let metaData = StorageMetadata()
             metaData.contentType = "image/jpeg"
             
-            ref?.putData(data, metadata: metaData, completion: { (data, error) in
+            ref?.putData(imageData, metadata: metaData, completion: { (data, error) in
                 if error != nil {
                     promise(.failure(.taskError))
                 } else {
