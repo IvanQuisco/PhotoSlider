@@ -9,9 +9,19 @@ import Foundation
 import ComposableArchitecture
 import Firebase
 
+public struct IdentifiableData: Equatable {
+    let id: String
+    let data: Data
+    
+    init(id: String = UUID().uuidString, data: Data) {
+        self.id = id
+        self.data = data
+    }
+}
+
 struct SliderState: Equatable {
     
-    var imageDataSource: [Data] = []
+    var imageDataSource: [IdentifiableData] = []
     
     var currentUser: Firebase.User?
     
@@ -34,10 +44,11 @@ enum SliderAction: Equatable {
     case uploadPhotoButtonTapped
     case cancelButtonTapped
     case imageData(Data?)
+    case uploadResponse(Result<HasableVoid, StorageError>)
     
     //DownloadImages
     case getImages
-    case imagesDataReceived(Result<[Data], StorageError>)
+    case imagesDataReceived(Result<[IdentifiableData], StorageError>)
     case cancelImagesSubscription
 }
 
@@ -57,6 +68,7 @@ typealias SliderReducer = Reducer<SliderState, SliderAction, SliderEnvironmnet>
 
 let sliderReducer = SliderReducer { state, action, environment in
     struct ImagesSubscriptionID: Hashable {}
+    struct UploadSubscriptionID: Hashable {}
     
     switch action {
     
@@ -101,9 +113,27 @@ let sliderReducer = SliderReducer { state, action, environment in
         return .none
         
     case .uploadPhotoButtonTapped:
-        print("TODO: Firebase storage task")
-        environment.firebaseManager.upload(imageData: state.selectedImageData!)
-        return .none
+        guard let data = state.selectedImageData else {
+            return .none
+        }
+        
+        return environment
+            .firebaseManager
+            .uploadImage(data: data)
+            .convertToVoidSignal()
+            .catchToEffect()
+            .map(SliderAction.uploadResponse)
+            .cancellable(id: UploadSubscriptionID())
+        
+    case let .uploadResponse(result):
+        switch result {
+        case .success:
+            state.selectedImageData = nil
+            return Effect(value: .getImages)
+            
+        case .failure:
+            return .none
+        }
         
     case .cancelButtonTapped:
         state.selectedImageData = nil

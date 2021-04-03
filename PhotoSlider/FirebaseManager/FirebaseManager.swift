@@ -39,19 +39,11 @@ class FirebaseManager {
         return auth.currentUser
     }
     
-    //TODOD - make it combine and TCA friendly
-    func upload(imageData: Data) {
-        let imageRef = storage.reference().child("images").child("profile").child("algo.jpg")
-        
-        let metaData = StorageMetadata()
-        metaData.contentType = "image/jpeg"
-        
-        imageRef.putData(imageData, metadata: metaData) { (metaData, error) in
-            //todo
-        }
+    func uploadImage(data: Data) -> AnyPublisher<Void, StorageError> {
+        storage.uploadImage(data: data)
     }
     
-    func downloadImages() -> AnyPublisher<[Data], StorageError> {
+    func downloadImages() -> AnyPublisher<[IdentifiableData], StorageError> {
         let path = "images/profile/"
         return storage.getImagesData(for: path)
     }
@@ -62,13 +54,33 @@ public enum StorageError: Error {
     case queryError
     case translationError
     case timeoutError
+    case taskError
 }
 
 
 extension Storage {
     
-    public func getImagesData(for path: String) -> AnyPublisher<[Data], StorageError> {
-        Future<[Data], StorageError> { promise in
+    public func uploadImage(data: Data, name: String = UUID().uuidString) -> AnyPublisher<Void, StorageError> {
+        Future<Void, StorageError> { [weak self] promise in
+            
+            let ref = self?.reference().child("images").child("profile").child(name)
+            
+            let metaData = StorageMetadata()
+            metaData.contentType = "image/jpeg"
+            
+            ref?.putData(data, metadata: metaData, completion: { (data, error) in
+                if error != nil {
+                    promise(.failure(.taskError))
+                } else {
+                    promise(.success(()))
+                }
+            })
+            
+        }.eraseToAnyPublisher()
+    }
+    
+    public func getImagesData(for path: String) -> AnyPublisher<[IdentifiableData], StorageError> {
+        Future<[IdentifiableData], StorageError> { promise in
             let ref  = self.reference().child(path)
             ref.listAll { (list, error) in
                 if error != nil {
@@ -76,13 +88,13 @@ extension Storage {
                 } else {
                     let expected = list.items.count
                     var count = 0
-                    var dataSource: [Data?] = []
+                    var dataSource: [IdentifiableData] = []
                     for item in list.items {
                         let itemRef = self.reference().child("\(path)\(item.name)")
                         itemRef.getData(maxSize: 1024*1024) { (data, dataError) in
                             count += 1
                             if let url = data {
-                                dataSource.append(url)
+                                dataSource.append(IdentifiableData(id: item.name, data: url))
                                 if expected == count {
                                     promise(.success(dataSource.compactMap { $0 }))
                                 }
