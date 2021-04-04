@@ -99,6 +99,9 @@ let appReducer = AppReducer.combine(
                 state.isActivityPresented = false
                 state.sliderState.currentUser = data.user
                 state.uiState = .home
+            case let .authResponse(.failure(error)):
+                print(error)
+                state.isActivityPresented = false
             default:
                 break
             }

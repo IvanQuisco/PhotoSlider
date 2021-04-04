@@ -13,9 +13,11 @@ struct SliderView: View {
     
     let store: Store<SliderState, SliderAction>
 
+    let imageSide = UIScreen.main.bounds.width/2
+    
     let layout = [
-        GridItem(.flexible(minimum: 150)),
-        GridItem(.flexible(minimum: 150))
+        GridItem(.flexible(minimum: UIScreen.main.bounds.width/2)),
+        GridItem(.flexible(minimum: UIScreen.main.bounds.width/2))
     ]
 
     var body: some View {
@@ -28,21 +30,24 @@ struct SliderView: View {
                 NavigationView {
                     VStack {
                         ScrollView {
-                            LazyVGrid(columns: layout, content: {
+                            LazyVGrid(columns: layout) {
                                 ForEach(viewStore.imageDataSource, id: \.self) { url in
                                         WebImage(url: url)
                                             .resizable()
-                                            .scaledToFit()
+                                            .aspectRatio(contentMode: .fill)
+                                            .frame(width: imageSide, height: imageSide, alignment: .center)
+                                            .border(Color.black)
+                                            .clipped()
                                 }
-                            })
-                            .padding(10)
+                            }
                         }
 
                         if let imageData = viewStore.selectedImageData, let image = UIImage(data: imageData) {
                             SelectedImageView(
                                 image: image,
                                 onUploadButtonTap: { viewStore.send(.uploadPhotoButtonTapped) },
-                                onCancelButtonTap: { viewStore.send(.cancelButtonTapped) }
+                                onCancelButtonTap: { viewStore.send(.cancelButtonTapped) },
+                                onImageTap: { viewStore.send(.presentPickerButtonTapped(true)) }
                             )
                             .padding(.bottom, 10)
                         } else {
@@ -98,10 +103,14 @@ struct SliderView: View {
         
         var onCancelButtonTap: () -> Void
         
+        var onImageTap: () -> Void
+        
         let side: CGFloat = 200
 
         var body: some View {
             VStack(spacing: 5) {
+                Divider()
+                
                 Text("Selected Image:")
                     .font(.footnote)
                 
@@ -111,7 +120,9 @@ struct SliderView: View {
                     Image(uiImage: image)
                         .resizable()
                         .scaledToFit()
+                        .border(Color.green, width: 4)
                         .frame(minWidth: side, maxWidth: side, minHeight: side, maxHeight: side)
+                        .onTapGesture { onImageTap() }
                     
                     Spacer()
                 }
