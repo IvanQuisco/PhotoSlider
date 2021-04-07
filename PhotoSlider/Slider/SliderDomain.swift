@@ -38,7 +38,7 @@ enum SliderAction: Equatable {
     case imageData(Data?)
     case uploadImageResponse(Result<URL, StorageError>)
     
-    case uploadPost(URL)
+    case uploadNewPost(URL)
     case uploadPostResponse(Result<HashableVoid, StorageError>)
     
     //DownloadImages
@@ -66,6 +66,7 @@ typealias SliderReducer = Reducer<SliderState, SliderAction, SliderEnvironmnet>
 let sliderReducer = SliderReducer { state, action, environment in
     struct ImagesSubscriptionID: Hashable {}
     struct UploadSubscriptionID: Hashable {}
+    struct UploadNewPostSubscriptionID: Hashable {}
     
     switch action {
     
@@ -135,14 +136,19 @@ let sliderReducer = SliderReducer { state, action, environment in
     case let .uploadImageResponse(result):
         switch result {
         case let .success(url):
-            return Effect(value: .uploadPost(url))
+            return Effect(value: .uploadNewPost(url))
         case .failure:
             return .none
         }
         
-    case let .uploadPost(url):
-        //TODO: save post by using firebaseManager
-        return Effect(value: .uploadPostResponse(.success(HashableVoid())))
+    case let .uploadNewPost(url):
+        return environment
+            .firebaseManager
+            .uploadNewPost(imageURL: url)
+            .convertToVoidSignal()
+            .catchToEffect()
+            .map(SliderAction.uploadPostResponse)
+            .cancellable(id: UploadNewPostSubscriptionID())
         
     case let .uploadPostResponse(result):
         switch result {

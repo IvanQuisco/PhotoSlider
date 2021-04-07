@@ -14,6 +14,8 @@ class FirebaseManager {
     
     let storage = Storage.storage()
     
+    let db = Firestore.firestore()
+    
     var isUserLoggedIn: Bool {
         auth.currentUser != nil
     }
@@ -54,89 +56,21 @@ class FirebaseManager {
         let path = "\(user.uid)/photos/"
         return storage.getImagesData(for: path)
     }
-}
-
-
-public enum StorageError: Error {
-    case queryError
-    case translationError
-    case timeoutError
-    case taskError
-    case invalidUser
-}
-
-
-extension Storage {
     
-    public func uploadImage(userID: String, imageData: Data, imageName: String = UUID().uuidString) -> AnyPublisher<URL, StorageError> {
-        Future<URL, StorageError> { [weak self] promise in
-            
-            let uploadRef = self?.reference().child(userID).child("photos").child(imageName)
-            
-            let metaData = StorageMetadata()
-            metaData.contentType = "image/jpeg"
-            
-            uploadRef?.putData(imageData, metadata: metaData, completion: { (data, error) in
-                
-                if error != nil {
-                    
-                    promise(.failure(.taskError))
-                    
-                } else {
-                    
-                    uploadRef?.downloadURL { (url, error) in
-                        
-                        if let url = url {
-                            
-                            promise(.success(url))
-                            
-                        } else {
-                            
-                            promise(.failure(.taskError))
-                            
-                        }
-                    }
-                }
-            })
-            
-        }.eraseToAnyPublisher()
+    func uploadNewPost(imageURL: URL) -> AnyPublisher<Void, StorageError> {
+        let post = Post(
+            id: UUID().uuidString,
+            user: (auth.currentUser?.email)!,
+            description: "not supported",
+            timestamp: Date().timeIntervalSince1970,
+            imageURL: imageURL.absoluteString,
+            likes: []
+        )
+        return self.db.uploadPost(post: post)
     }
     
-    public func getImagesData(for path: String) -> AnyPublisher<[URL], StorageError> {
-        Future<[URL], StorageError> { promise in
-            let ref  = self.reference().child(path)
-            ref.listAll { (list, error) in
-                if error != nil {
-                    promise(.failure(.queryError))
-                } else {
-                    
-                    let expected = list.items.count
-                    var count = 0
-                    var dataSource: [URL] = []
-                    
-                    if expected == 0 {
-                        promise(.success([]))
-                    }
-                    
-                    for item in list.items {
-                        let itemRef = self.reference().child("\(path)\(item.name)")
-                        itemRef.downloadURL { (data, dataError) in
-                            count += 1
-                            if let url = data {
-                                dataSource.append(url)
-                                if expected == count {
-                                    promise(.success(dataSource.compactMap { $0 }))
-                                }
-                            } else if dataError != nil {
-                                promise(.failure(.translationError))
-                            } else {
-                                promise(.failure(.timeoutError))
-                            }
-                        }
-                    }
-                }
-            }
-        }.eraseToAnyPublisher()
+    func updatePost(post: Post) -> AnyPublisher<Void, StorageError>  {
+        //TODO: check logic here
+        self.db.uploadPost(post: post)
     }
-    
 }
