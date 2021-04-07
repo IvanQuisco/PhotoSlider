@@ -39,7 +39,7 @@ class FirebaseManager {
         return auth.currentUser
     }
     
-    func uploadImage(data: Data) -> AnyPublisher<Void, StorageError> {
+    func uploadImage(data: Data) -> AnyPublisher<URL, StorageError> {
         guard let user = auth.currentUser else {
             return Fail(error: StorageError.invalidUser).eraseToAnyPublisher()
         }
@@ -68,19 +68,34 @@ public enum StorageError: Error {
 
 extension Storage {
     
-    public func uploadImage(userID: String, imageData: Data, imageName: String = UUID().uuidString) -> AnyPublisher<Void, StorageError> {
-        Future<Void, StorageError> { [weak self] promise in
+    public func uploadImage(userID: String, imageData: Data, imageName: String = UUID().uuidString) -> AnyPublisher<URL, StorageError> {
+        Future<URL, StorageError> { [weak self] promise in
             
-            let ref = self?.reference().child(userID).child("photos").child(imageName)
+            let uploadRef = self?.reference().child(userID).child("photos").child(imageName)
             
             let metaData = StorageMetadata()
             metaData.contentType = "image/jpeg"
             
-            ref?.putData(imageData, metadata: metaData, completion: { (data, error) in
+            uploadRef?.putData(imageData, metadata: metaData, completion: { (data, error) in
+                
                 if error != nil {
+                    
                     promise(.failure(.taskError))
+                    
                 } else {
-                    promise(.success(()))
+                    
+                    uploadRef?.downloadURL { (url, error) in
+                        
+                        if let url = url {
+                            
+                            promise(.success(url))
+                            
+                        } else {
+                            
+                            promise(.failure(.taskError))
+                            
+                        }
+                    }
                 }
             })
             

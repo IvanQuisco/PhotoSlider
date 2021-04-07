@@ -36,7 +36,10 @@ enum SliderAction: Equatable {
     case uploadPhotoButtonTapped
     case cancelButtonTapped
     case imageData(Data?)
-    case uploadResponse(Result<HasableVoid, StorageError>)
+    case uploadImageResponse(Result<URL, StorageError>)
+    
+    case uploadPost(URL)
+    case uploadPostResponse(Result<HashableVoid, StorageError>)
     
     //DownloadImages
     case getImages
@@ -125,17 +128,27 @@ let sliderReducer = SliderReducer { state, action, environment in
         return environment
             .firebaseManager
             .uploadImage(data: data)
-            .convertToVoidSignal()
             .catchToEffect()
-            .map(SliderAction.uploadResponse)
+            .map(SliderAction.uploadImageResponse)
             .cancellable(id: UploadSubscriptionID())
         
-    case let .uploadResponse(result):
+    case let .uploadImageResponse(result):
+        switch result {
+        case let .success(url):
+            return Effect(value: .uploadPost(url))
+        case .failure:
+            return .none
+        }
+        
+    case let .uploadPost(url):
+        //TODO: save post by using firebaseManager
+        return Effect(value: .uploadPostResponse(.success(HashableVoid())))
+        
+    case let .uploadPostResponse(result):
         switch result {
         case .success:
             state.selectedImageData = nil
             return Effect(value: .getImages)
-            
         case .failure:
             return .none
         }
