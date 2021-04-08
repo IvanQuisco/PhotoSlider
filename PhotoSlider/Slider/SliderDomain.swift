@@ -9,9 +9,14 @@ import Foundation
 import ComposableArchitecture
 import Firebase
 
+enum PhotosPresentation {
+    case all
+    case user
+}
+
 struct SliderState: Equatable {
     
-    var imageDataSource: [URL] = []
+    var postsDataSource: [Post] = []
     
     var currentUser: Firebase.User?
     
@@ -20,6 +25,15 @@ struct SliderState: Equatable {
     var selectedImageData: Data?
     
     var isActivityPresented: Bool = true
+    
+    var photosPresented: PhotosPresentation = .all
+    
+    var filteredPosts: [Post] {
+        if photosPresented == .user {
+            return postsDataSource.filter { $0.user == self.currentUser?.email }
+        }
+        return postsDataSource
+    }
 }
 
 enum SliderAction: Equatable {
@@ -36,14 +50,19 @@ enum SliderAction: Equatable {
     case uploadPhotoButtonTapped
     case cancelButtonTapped
     case imageData(Data?)
-    case uploadResponse(Result<HasableVoid, StorageError>)
+    case uploadImageResponse(Result<URL, StorageError>)
+    
+    case uploadNewPost(URL)
+    case uploadPostResponse(Result<HashableVoid, StorageError>)
     
     //DownloadImages
-    case getImages
-    case imagesDataReceived(Result<[URL], StorageError>)
+    case getPosts
+    case postsReceived(Result<[Post], StorageError>)
     case cancelImagesSubscription
     
     case stopActivity
+    
+    case switchPhotosPresentation
 }
 
 struct SliderEnvironmnet {
@@ -61,28 +80,29 @@ extension SliderEnvironmnet {
 typealias SliderReducer = Reducer<SliderState, SliderAction, SliderEnvironmnet>
 
 let sliderReducer = SliderReducer { state, action, environment in
-    struct ImagesSubscriptionID: Hashable {}
+    struct GetPostsSubscriptionID: Hashable {}
     struct UploadSubscriptionID: Hashable {}
+    struct UploadNewPostSubscriptionID: Hashable {}
     
     switch action {
     
     case .onAppear:
         state.currentUser = environment.firebaseManager.getCurrentUser()
-        return Effect(value: .getImages)
+        return Effect(value: .getPosts)
         
-    case .getImages:
+    case .getPosts:
         return environment
             .firebaseManager
-            .downloadImages()
+            .getPosts()
             .catchToEffect()
-            .map(SliderAction.imagesDataReceived)
-            .cancellable(id: ImagesSubscriptionID())
+            .map(SliderAction.postsReceived)
+            .cancellable(id: GetPostsSubscriptionID())
         
-    case let .imagesDataReceived(result):
+    case let .postsReceived(result):
         switch  result {
         case let .success(data):
             state.isActivityPresented = false
-            state.imageDataSource = data
+            state.postsDataSource = data
         default:
             break
         }
@@ -90,7 +110,7 @@ let sliderReducer = SliderReducer { state, action, environment in
         
     case .cancelImagesSubscription:
     
-    return Effect.cancel(id: ImagesSubscriptionID())
+    return Effect.cancel(id: GetPostsSubscriptionID())
         
     case .logOut:
         state.isActivityPresented = true
@@ -105,7 +125,7 @@ let sliderReducer = SliderReducer { state, action, environment in
         switch result {
         case .success:
             state.isActivityPresented = false
-            state.imageDataSource = []
+            state.postsDataSource = []
         default:
             break
         }
@@ -125,17 +145,32 @@ let sliderReducer = SliderReducer { state, action, environment in
         return environment
             .firebaseManager
             .uploadImage(data: data)
-            .convertToVoidSignal()
             .catchToEffect()
-            .map(SliderAction.uploadResponse)
+            .map(SliderAction.uploadImageResponse)
             .cancellable(id: UploadSubscriptionID())
         
-    case let .uploadResponse(result):
+    case let .uploadImageResponse(result):
+        switch result {
+        case let .success(url):
+            return Effect(value: .uploadNewPost(url))
+        case .failure:
+            return .none
+        }
+        
+    case let .uploadNewPost(url):
+        return environment
+            .firebaseManager
+            .uploadNewPost(imageURL: url)
+            .convertToVoidSignal()
+            .catchToEffect()
+            .map(SliderAction.uploadPostResponse)
+            .cancellable(id: UploadNewPostSubscriptionID())
+        
+    case let .uploadPostResponse(result):
         switch result {
         case .success:
             state.selectedImageData = nil
-            return Effect(value: .getImages)
-            
+            return Effect(value: .getPosts)
         case .failure:
             return .none
         }
@@ -149,6 +184,11 @@ let sliderReducer = SliderReducer { state, action, environment in
         return .none
         
     case .stopActivity:
+        return .none
+        
+    case .switchPhotosPresentation:
+        let current = state.photosPresented
+        state.photosPresented = current == .all ? .user : .all
         return .none
     }
 }

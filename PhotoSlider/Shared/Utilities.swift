@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-struct HasableVoid: Hashable {}
+struct HashableVoid: Hashable {}
 
 extension Combine.Publisher {
     func convert<T>(to value: T) -> Combine.Publishers.Map<Self,T> {
@@ -19,7 +19,7 @@ extension Combine.Publisher {
         return convert(to: ())
     }
     
-    func convertToVoidSignal() -> Combine.Publishers.Map<Self, HasableVoid> {
-        return convert(to: HasableVoid())
+    func convertToVoidSignal() -> Combine.Publishers.Map<Self, HashableVoid> {
+        return convert(to: HashableVoid())
     }
 }

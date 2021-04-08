@@ -31,8 +31,8 @@ struct SliderView: View {
                     VStack {
                         ScrollView {
                             LazyVGrid(columns: layout) {
-                                ForEach(viewStore.imageDataSource, id: \.self) { url in
-                                        WebImage(url: url)
+                                ForEach(viewStore.filteredPosts, id: \.self) { post in
+                                    WebImage(url: URL(string: post.imageURL))
                                             .resizable()
                                             .aspectRatio(contentMode: .fill)
                                             .frame(width: imageSide, height: imageSide, alignment: .center)
@@ -75,16 +75,22 @@ struct SliderView: View {
                             )
                         )
                     }
-                    .navigationBarTitle("Home", displayMode: .large)
+                    .navigationBarTitle(viewStore.photosPresented == .all ? "Home" : (viewStore.currentUser?.email) ?? "User", displayMode: .large)
                     .navigationBarItems(trailing:
-                                            VStack {
+                                            HStack(spacing: 30) {
+                                                Button(action: {
+                                                    viewStore.send(.switchPhotosPresentation)
+                                                }, label: {
+                                                    Image(systemName: viewStore.photosPresented == .all ? "person.fill" : "person.3.fill")
+                                                })
+                                                .disabled(false)
+
                                                 Button(action: {
                                                     viewStore.send(.logOut)
                                                 }, label: {
-                                                    Text("Log out")
+                                                    Image(systemName: "xmark.seal.fill")
                                                 })
-                                                Text(viewStore.currentUser?.email ?? "")
-                                                    .font(.caption2)
+                                                .disabled(false)
                                             }
                     )
                 }
@@ -92,6 +98,7 @@ struct SliderView: View {
             .onAppear(perform: {
                 viewStore.send(.onAppear)
             })
+            .animation(.default)
         }
     }
     

@@ -13,6 +13,9 @@
 		2D04226B25FFE75400D08798 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D04226A25FFE75400D08798 /* Assets.xcassets */; };
 		2D04226E25FFE75400D08798 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D04226D25FFE75400D08798 /* Preview Assets.xcassets */; };
 		2D04227125FFE75400D08798 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2D04226F25FFE75400D08798 /* LaunchScreen.storyboard */; };
+		2D0F870A261E7C9E0060DD47 /* Storage+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0F8709261E7C9D0060DD47 /* Storage+ext.swift */; };
+		2D0F870D261E7CAA0060DD47 /* Firestore+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0F870C261E7CAA0060DD47 /* Firestore+ext.swift */; };
+		2D0F8710261E89C50060DD47 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0F870F261E89C50060DD47 /* Post.swift */; };
 		2D458FC825FFECBA00AEA191 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 2D458FC725FFECBA00AEA191 /* FirebaseStorage */; };
 		2D458FCA25FFECBA00AEA191 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 2D458FC925FFECBA00AEA191 /* FirebaseAuth */; };
 		2D458FCC25FFECBA00AEA191 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 2D458FCB25FFECBA00AEA191 /* FirebaseFirestore */; };
@@ -42,6 +45,9 @@
 		2D04226D25FFE75400D08798 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		2D04227025FFE75400D08798 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2D04227225FFE75400D08798 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2D0F8709261E7C9D0060DD47 /* Storage+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Storage+ext.swift"; sourceTree = "<group>"; };
+		2D0F870C261E7CAA0060DD47 /* Firestore+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Firestore+ext.swift"; sourceTree = "<group>"; };
+		2D0F870F261E89C50060DD47 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		2D458FD525FFF58500AEA191 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2D458FDE260000CB00AEA191 /* AppDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDomain.swift; sourceTree = "<group>"; };
 		2D5E83CC26183FDE0031E02B /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
@@ -117,7 +123,6 @@
 			children = (
 				2D458FDE260000CB00AEA191 /* AppDomain.swift */,
 				2D04226825FFE75300D08798 /* AppView.swift */,
-				2D5E83CC26183FDE0031E02B /* LoadingView.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -165,6 +170,8 @@
 			isa = PBXGroup;
 			children = (
 				2DB26A5826065939005F55AC /* Auth+ext.swift */,
+				2D0F8709261E7C9D0060DD47 /* Storage+ext.swift */,
+				2D0F870C261E7CAA0060DD47 /* Firestore+ext.swift */,
 				2D83DC642600094B006501D6 /* FirebaseManager.swift */,
 			);
 			path = FirebaseManager;
@@ -173,8 +180,10 @@
 		2DB26A54260646E3005F55AC /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				2D0F870F261E89C50060DD47 /* Post.swift */,
 				2DB26A55260646ED005F55AC /* Utilities.swift */,
 				2D6A5B9B2607FB16008423FC /* CustomImagePickerView.swift */,
+				2D5E83CC26183FDE0031E02B /* LoadingView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -267,14 +276,17 @@
 				2D04226525FFE75300D08798 /* AppDelegate.swift in Sources */,
 				2DB26A5926065939005F55AC /* Auth+ext.swift in Sources */,
 				2D04226725FFE75300D08798 /* SceneDelegate.swift in Sources */,
+				2D0F8710261E89C50060DD47 /* Post.swift in Sources */,
 				2DB26A5E26066822005F55AC /* SliderDomain.swift in Sources */,
 				2D5E83CD26183FDE0031E02B /* LoadingView.swift in Sources */,
 				2D83DC652600094B006501D6 /* FirebaseManager.swift in Sources */,
 				2D04226925FFE75300D08798 /* AppView.swift in Sources */,
+				2D0F870A261E7C9E0060DD47 /* Storage+ext.swift in Sources */,
 				2DB26A4D2605213C005F55AC /* AuthenticationDomain.swift in Sources */,
 				2D6A5B9C2607FB16008423FC /* CustomImagePickerView.swift in Sources */,
 				2D458FDF260000CB00AEA191 /* AppDomain.swift in Sources */,
 				2DB26A51260533B6005F55AC /* SignUpView.swift in Sources */,
+				2D0F870D261E7CAA0060DD47 /* Firestore+ext.swift in Sources */,
 				2DB26A56260646ED005F55AC /* Utilities.swift in Sources */,
 				2D83DC7626000D74006501D6 /* SliderView.swift in Sources */,
 			);
