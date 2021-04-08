@@ -9,6 +9,11 @@ import Foundation
 import ComposableArchitecture
 import Firebase
 
+enum PhotosPresentation {
+    case all
+    case user
+}
+
 struct SliderState: Equatable {
     
     var postsDataSource: [Post] = []
@@ -20,6 +25,15 @@ struct SliderState: Equatable {
     var selectedImageData: Data?
     
     var isActivityPresented: Bool = true
+    
+    var photosPresented: PhotosPresentation = .all
+    
+    var filteredPosts: [Post] {
+        if photosPresented == .user {
+            return postsDataSource.filter { $0.user == self.currentUser?.email }
+        }
+        return postsDataSource
+    }
 }
 
 enum SliderAction: Equatable {
@@ -47,6 +61,8 @@ enum SliderAction: Equatable {
     case cancelImagesSubscription
     
     case stopActivity
+    
+    case switchPhotosPresentation
 }
 
 struct SliderEnvironmnet {
@@ -168,6 +184,11 @@ let sliderReducer = SliderReducer { state, action, environment in
         return .none
         
     case .stopActivity:
+        return .none
+        
+    case .switchPhotosPresentation:
+        let current = state.photosPresented
+        state.photosPresented = current == .all ? .user : .all
         return .none
     }
 }

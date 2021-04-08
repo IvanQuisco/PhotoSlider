@@ -25,6 +25,8 @@ struct AuthState: Equatable {
     var passwordConfirmation: String = ""
     var signUpMatchingPasswords: Bool = false
     
+    var isActivityPresented = false
+    
     var isSignUpButtonEnabled: Bool {
         newUser.validCretentials && signUpMatchingPasswords
     }
@@ -46,6 +48,8 @@ enum AuthAction: Equatable {
     case createNewUser
     
     case authResponse(Result<FireResponse, FireError>)
+    
+    case stopActivity
 }
 
 struct AuthEnvironment {
@@ -76,6 +80,7 @@ let authReducer = AuthReducer { state, action, environment in
         return .none
         
     case .loginButtonTapped:
+        state.isActivityPresented = true
         return environment
             .firebaseManager
             .login(userRequest: state.loginUser)
@@ -99,6 +104,7 @@ let authReducer = AuthReducer { state, action, environment in
         return .none
         
     case .signUpButtonTapped:
+        state.isActivityPresented = true
         return environment
             .firebaseManager
             .createUser(userRequest: state.newUser)
@@ -111,6 +117,8 @@ let authReducer = AuthReducer { state, action, environment in
     // MARK: - Firebase task Response
     
     case let .authResponse(result):
+        state.isActivityPresented = false
+        
         switch result {
         case let .success(.loginSuccess(data)):
             state.loginUser.password = ""
@@ -128,6 +136,10 @@ let authReducer = AuthReducer { state, action, environment in
             break
         }
         
+        return .none
+        
+    case .stopActivity:
+        state.isActivityPresented = false
         return .none
     }
 }

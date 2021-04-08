@@ -123,7 +123,6 @@
 			children = (
 				2D458FDE260000CB00AEA191 /* AppDomain.swift */,
 				2D04226825FFE75300D08798 /* AppView.swift */,
-				2D5E83CC26183FDE0031E02B /* LoadingView.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -181,9 +180,10 @@
 		2DB26A54260646E3005F55AC /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				2D0F870F261E89C50060DD47 /* Post.swift */,
 				2DB26A55260646ED005F55AC /* Utilities.swift */,
 				2D6A5B9B2607FB16008423FC /* CustomImagePickerView.swift */,
-				2D0F870F261E89C50060DD47 /* Post.swift */,
+				2D5E83CC26183FDE0031E02B /* LoadingView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";

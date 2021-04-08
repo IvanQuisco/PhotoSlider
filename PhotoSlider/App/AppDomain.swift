@@ -17,8 +17,6 @@ struct AppState: Equatable {
     var uiState: UIState = .auth
     var authState: AuthState = .init()
     var sliderState: SliderState = .init()
-    
-    var isActivityPresented: Bool = false
 }
 
 enum AppAction: Equatable {
@@ -28,8 +26,6 @@ enum AppAction: Equatable {
     case validateSession
     case authAction(AuthAction)
     case sliderAction(SliderAction)
-    
-    case stopActivity
 }
 
 struct AppEnvironment {
@@ -89,19 +85,14 @@ let appReducer = AppReducer.combine(
             
         case let .authAction(action):
             switch action {
-            case .loginButtonTapped, .signUpButtonTapped:
-                state.isActivityPresented = true
             case let .authResponse(.success(.loginSuccess(data))):
-                state.isActivityPresented = false
                 state.sliderState.currentUser = data.user
                 state.uiState = .home
             case let .authResponse(.success(.userCreated(data))):
-                state.isActivityPresented = false
                 state.sliderState.currentUser = data.user
                 state.uiState = .home
             case let .authResponse(.failure(error)):
-                print(error)
-                state.isActivityPresented = false
+                print("TODO: handle error: ", error)
             default:
                 break
             }
@@ -114,9 +105,6 @@ let appReducer = AppReducer.combine(
             default:
                 break
             }
-            return .none
-            
-        case .stopActivity:
             return .none
         }
     }
