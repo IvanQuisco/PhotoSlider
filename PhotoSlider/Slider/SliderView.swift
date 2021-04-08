@@ -31,8 +31,8 @@ struct SliderView: View {
                     VStack {
                         ScrollView {
                             LazyVGrid(columns: layout) {
-                                ForEach(viewStore.imageDataSource, id: \.self) { url in
-                                        WebImage(url: url)
+                                ForEach(viewStore.postsDataSource, id: \.self) { post in
+                                    WebImage(url: URL(string: post.imageURL))
                                             .resizable()
                                             .aspectRatio(contentMode: .fill)
                                             .frame(width: imageSide, height: imageSide, alignment: .center)

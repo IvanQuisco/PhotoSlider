@@ -9,15 +9,6 @@ import Foundation
 import Combine
 import Firebase
 
-struct Post: Codable {
-    var id: String
-    var user: String
-    var description: String
-    var timestamp: TimeInterval
-    var imageURL: String
-    var likes: [String]
-}
-
 extension Firestore {
     func uploadPost(post: Post) -> AnyPublisher<Void, StorageError> {
         Future<Void, StorageError> { promise in
@@ -44,6 +35,43 @@ extension Firestore {
                 promise(.failure(.invalidPost))
                 
             }
+        }.eraseToAnyPublisher()
+    }
+    
+    func getAllPosts() -> AnyPublisher<[Post], StorageError> {
+        Future<[Post], StorageError> { promise in
+            self.collection("posts").getDocuments { (snapshot, error) in
+                if error != nil {
+                    
+                    promise(.failure(.taskError))
+                    
+                } else if let snapshot = snapshot {
+                    do  {
+                        
+                        let posts = try snapshot.documents.map { doc -> Post in
+                            return try JSONDecoder()
+                                .decode(
+                                    Post.self,
+                                    from: try JSONSerialization.data(
+                                        withJSONObject: doc.data(),
+                                        options: .fragmentsAllowed
+                                    )
+                                )
+                        }.sorted(by: { $0.timestamp > $1.timestamp })
+                        
+                        promise(.success(posts))
+                        
+                    } catch {
+                        
+                        promise(.failure(.firestoreError))
+                    }
+                    
+                }else {
+                    
+                    promise(.failure(.taskError))
+                }
+            }
+        
         }.eraseToAnyPublisher()
     }
 }

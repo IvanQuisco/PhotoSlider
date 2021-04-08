@@ -73,4 +73,8 @@ class FirebaseManager {
         //TODO: check logic here
         self.db.uploadPost(post: post)
     }
+    
+    func getPosts() -> AnyPublisher<[Post], StorageError> {
+        self.db.getAllPosts()
+    }
 }

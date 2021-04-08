@@ -11,7 +11,7 @@ import Firebase
 
 struct SliderState: Equatable {
     
-    var imageDataSource: [URL] = []
+    var postsDataSource: [Post] = []
     
     var currentUser: Firebase.User?
     
@@ -42,8 +42,8 @@ enum SliderAction: Equatable {
     case uploadPostResponse(Result<HashableVoid, StorageError>)
     
     //DownloadImages
-    case getImages
-    case imagesDataReceived(Result<[URL], StorageError>)
+    case getPosts
+    case postsReceived(Result<[Post], StorageError>)
     case cancelImagesSubscription
     
     case stopActivity
@@ -64,7 +64,7 @@ extension SliderEnvironmnet {
 typealias SliderReducer = Reducer<SliderState, SliderAction, SliderEnvironmnet>
 
 let sliderReducer = SliderReducer { state, action, environment in
-    struct ImagesSubscriptionID: Hashable {}
+    struct GetPostsSubscriptionID: Hashable {}
     struct UploadSubscriptionID: Hashable {}
     struct UploadNewPostSubscriptionID: Hashable {}
     
@@ -72,21 +72,21 @@ let sliderReducer = SliderReducer { state, action, environment in
     
     case .onAppear:
         state.currentUser = environment.firebaseManager.getCurrentUser()
-        return Effect(value: .getImages)
+        return Effect(value: .getPosts)
         
-    case .getImages:
+    case .getPosts:
         return environment
             .firebaseManager
-            .downloadImages()
+            .getPosts()
             .catchToEffect()
-            .map(SliderAction.imagesDataReceived)
-            .cancellable(id: ImagesSubscriptionID())
+            .map(SliderAction.postsReceived)
+            .cancellable(id: GetPostsSubscriptionID())
         
-    case let .imagesDataReceived(result):
+    case let .postsReceived(result):
         switch  result {
         case let .success(data):
             state.isActivityPresented = false
-            state.imageDataSource = data
+            state.postsDataSource = data
         default:
             break
         }
@@ -94,7 +94,7 @@ let sliderReducer = SliderReducer { state, action, environment in
         
     case .cancelImagesSubscription:
     
-    return Effect.cancel(id: ImagesSubscriptionID())
+    return Effect.cancel(id: GetPostsSubscriptionID())
         
     case .logOut:
         state.isActivityPresented = true
@@ -109,7 +109,7 @@ let sliderReducer = SliderReducer { state, action, environment in
         switch result {
         case .success:
             state.isActivityPresented = false
-            state.imageDataSource = []
+            state.postsDataSource = []
         default:
             break
         }
@@ -154,7 +154,7 @@ let sliderReducer = SliderReducer { state, action, environment in
         switch result {
         case .success:
             state.selectedImageData = nil
-            return Effect(value: .getImages)
+            return Effect(value: .getPosts)
         case .failure:
             return .none
         }
