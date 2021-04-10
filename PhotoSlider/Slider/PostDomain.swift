@@ -9,16 +9,27 @@ import Foundation
 import ComposableArchitecture
 
 enum PostAction: Equatable {
-    case likePost
+    case evaluateLikes
+    case userLiked
+    case userDisliked
 }
 
 struct PostEnvironment {}
 
-typealias PostReducer = Reducer<Post, PostAction, PostEnvironment>
+typealias PostReducer = Reducer<FormattedPost, PostAction, PostEnvironment>
 
 let postReducer = PostReducer { state, action, enviroment in
     switch action {
-    case .likePost:
+    
+    ///These methodos are mostly to trigger a pullback in the father domain.
+    
+    case .evaluateLikes:
+        return Effect(value: state.likedByUser ? .userDisliked : .userLiked)
+        
+    case .userLiked:
+        return .none
+        
+    case .userDisliked:
         return .none
     }
 }

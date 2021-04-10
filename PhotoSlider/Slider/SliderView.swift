@@ -29,6 +29,10 @@ struct SliderView: View {
                 ), content: {
                 NavigationView {
                     VStack {
+                        if viewStore.photosPresented == .user {
+                            Text(" You can not like your own photos. 😉 ")
+                        }
+                        
                         ScrollView {
                             LazyVGrid(columns: layout) {
                                 ForEachStore(
@@ -41,24 +45,25 @@ struct SliderView: View {
                             }
                         }
 
-                        if let imageData = viewStore.selectedImageData, let image = UIImage(data: imageData) {
-                            SelectedImageView(
-                                image: image,
-                                onUploadButtonTap: { viewStore.send(.uploadPhotoButtonTapped) },
-                                onCancelButtonTap: { viewStore.send(.cancelButtonTapped) },
-                                onImageTap: { viewStore.send(.presentPickerButtonTapped(true)) }
-                            )
-                            .padding(.bottom, 10)
-                        } else {
-                            ActionButton(
-                                title: "Photo",
-                                image: Image(systemName: "photo"),
-                                backgroundColor: Color.blue,
-                                onTap: { viewStore.send(.presentPickerButtonTapped(true)) }
-                            )
-                            .padding(.bottom, 10)
+                        if viewStore.photosPresented == .all {
+                            if let imageData = viewStore.selectedImageData, let image = UIImage(data: imageData) {
+                                SelectedImageView(
+                                    image: image,
+                                    onUploadButtonTap: { viewStore.send(.uploadPhotoButtonTapped) },
+                                    onCancelButtonTap: { viewStore.send(.cancelButtonTapped) },
+                                    onImageTap: { viewStore.send(.presentPickerButtonTapped(true)) }
+                                )
+                                .padding(.bottom, 10)
+                            } else {
+                                ActionButton(
+                                    title: "Photo",
+                                    image: Image(systemName: "photo"),
+                                    backgroundColor: Color.blue,
+                                    onTap: { viewStore.send(.presentPickerButtonTapped(true)) }
+                                )
+                                .padding(.bottom, 10)
+                            }
                         }
-         
                     }
                     .sheet(
                         isPresented: viewStore.binding(
@@ -82,14 +87,13 @@ struct SliderView: View {
                                                 }, label: {
                                                     Image(systemName: viewStore.photosPresented == .all ? "person.fill" : "person.3.fill")
                                                 })
-                                                .disabled(false)
+                                                .disabled(viewStore.selectedImageData != nil)
 
                                                 Button(action: {
                                                     viewStore.send(.logOut)
                                                 }, label: {
                                                     Image(systemName: "xmark.seal.fill")
                                                 })
-                                                .disabled(false)
                                             }
                     )
                 }

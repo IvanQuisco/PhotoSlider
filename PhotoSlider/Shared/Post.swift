@@ -15,3 +15,9 @@ struct Post: Codable, Equatable, Hashable, Identifiable {
     var imageURL: String
     var likes: [String]
 }
+
+struct FormattedPost: Equatable, Hashable, Identifiable {
+    var id: String { self.post.id }
+    var post: Post
+    var likedByUser: Bool //Might become in current user data
+}

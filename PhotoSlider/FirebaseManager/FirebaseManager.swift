@@ -77,4 +77,9 @@ class FirebaseManager {
     func getPosts() -> AnyPublisher<[Post], StorageError> {
         self.db.getAllPosts()
     }
+    
+    func getFormattedPost(for post: Post) -> FormattedPost {
+        let liked = post.likes.contains(self.getCurrentUser()?.email ?? "")
+        return FormattedPost(post: post, likedByUser: liked)
+    }
 }
