@@ -63,6 +63,8 @@ enum SliderAction: Equatable {
     case stopActivity
     
     case switchPhotosPresentation
+    
+    case post(index: Int, action: PostAction)
 }
 
 struct SliderEnvironmnet {
@@ -189,6 +191,9 @@ let sliderReducer = SliderReducer { state, action, environment in
     case .switchPhotosPresentation:
         let current = state.photosPresented
         state.photosPresented = current == .all ? .user : .all
+        return .none
+        
+    case .post(index: let index, action: let action):
         return .none
     }
 }

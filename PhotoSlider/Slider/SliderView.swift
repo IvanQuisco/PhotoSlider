@@ -31,14 +31,13 @@ struct SliderView: View {
                     VStack {
                         ScrollView {
                             LazyVGrid(columns: layout) {
-                                ForEach(viewStore.filteredPosts, id: \.self) { post in
-                                    WebImage(url: URL(string: post.imageURL))
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fill)
-                                            .frame(width: imageSide, height: imageSide, alignment: .center)
-                                            .border(Color.black)
-                                            .clipped()
-                                }
+                                ForEachStore(
+                                    self.store.scope(
+                                        state: \.filteredPosts,
+                                        action: SliderAction.post(index:action:)
+                                    ),
+                                    content: PostView.init(store:)
+                                )
                             }
                         }
 

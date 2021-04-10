@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Post: Codable, Equatable, Hashable {
+struct Post: Codable, Equatable, Hashable, Identifiable {
     var id: String
     var user: String
     var description: String
