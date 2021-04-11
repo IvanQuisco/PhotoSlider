@@ -34,3 +34,8 @@ This app is an educational project where users can create an account where they 
 
 ## How to install:
 This project does not use cocoa pods, the dependecies are directely managed by SwiftPackageManager so there is not need to run any special command on terminal to make it build, running the project on Xcode should be enough (it might take few minutes at the first launch).
+
+### test user to login:
+* email: tester1@test.com
+* password: tester1
+
