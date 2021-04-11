@@ -1,5 +1,8 @@
 # Photo Slider 1.0 Release Notes 
 
+## Overview
+This app is an educational project where users can create an account where they will be able to upload photos and see/like photos uploaded by all others users that use the app.
+
 ## Technologies used for this project:
 * SwiftUI
 * Combine
@@ -28,3 +31,6 @@
 * Improve UX to let users know that they can not like their own photos.
 * Create a separate screen for user profile.
 * Introduce feature to delete posts.
+
+## How to install:
+This project does not use cocoa pods, the dependecies are directely managed by SwiftPackageManager so there is not need to run any special command on terminal to make it build, running the project on Xcode should be enough (it might take few minutes at the first launch).
